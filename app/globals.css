@@ -134,6 +134,11 @@ body {
 
   .will-change-transform { will-change: transform; }
 
+  @keyframes shimmer {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%);  }
+  }
+
   button, a { cursor: pointer; }
   .btn-active:active { transform: scale(0.97); }
 }

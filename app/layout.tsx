@@ -3,6 +3,7 @@ import { Syne, Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/providers'
 import { AppLoader } from '@/components/clyvo/app-loader'
+import { GoogleAnalytics } from '@/components/analytics'
 
 const syne = Syne({
   subsets: ['latin'],
@@ -50,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${syne.variable} ${inter.variable} ${jetbrainsMono.variable}`} style={{ background: '#000000' }}>
       <body className="text-white antialiased" style={{ background: '#000000', minHeight: '100vh' }}>
+        <GoogleAnalytics />
         <Providers>
           <AppLoader>
             {children}
