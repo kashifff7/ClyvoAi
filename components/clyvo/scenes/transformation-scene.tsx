@@ -35,8 +35,6 @@ const SERVICES = [
   },
 ]
 
-const WORDS_HEADLINE = ['Five', 'capabilities.', 'Infinite', 'applications.']
-
 export function TransformationScene() {
   const sectionRef = useRef<HTMLElement>(null)
   const trackRef   = useRef<HTMLDivElement>(null)
@@ -77,32 +75,22 @@ export function TransformationScene() {
       className="relative overflow-hidden"
       style={{ height: '100vh' }}
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.07] to-transparent" />
 
-      {/* Cyan background glow */}
-      <div
-        className="pointer-events-none absolute -right-40 top-1/3 h-[500px] w-[500px] rounded-full"
-        style={{ background: '#00E5FF', opacity: 0.08, filter: 'blur(180px)' }}
-      />
-
-      {/* Header */}
-      <div className="relative px-8 pb-10 pt-20 text-center md:px-16">
+      {/* Header — left-aligned */}
+      <div className="relative px-8 pb-10 pt-20 md:px-16">
         <motion.span
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.8 }}
           transition={{ duration: 0.7, ease: EASE_CINEMATIC }}
-          className="font-mono text-xs font-medium uppercase tracking-[0.2em]"
-          style={{ color: '#00E5FF' }}
+          className="font-inter font-medium text-[11px] uppercase tracking-[0.18em] text-white/35"
         >
           What We Build
         </motion.span>
 
-        <h2
-          className="mt-5 font-syne font-bold tracking-[-0.03em] text-white"
-          style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)' }}
-        >
-          {WORDS_HEADLINE.map((word, i) => (
+        <h2 className="mt-5 font-syne text-4xl font-bold tracking-[-0.03em] text-white md:text-5xl lg:text-6xl">
+          {['Five', 'capabilities.', 'Infinite', 'applications.'].map((word, i) => (
             <motion.span
               key={word}
               className="mr-[0.22em] inline-block last:mr-0"
@@ -121,7 +109,7 @@ export function TransformationScene() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.6 }}
           transition={{ duration: 0.8, delay: 0.3, ease: EASE_CINEMATIC }}
-          className="mx-auto mt-4 max-w-xl font-inter text-base font-light text-white/50"
+          className="mt-4 max-w-xl font-inter text-base font-light text-white/45"
         >
           Every engagement is built from scratch around your business.
         </motion.p>
@@ -131,13 +119,12 @@ export function TransformationScene() {
       <div className="relative overflow-visible px-8 md:px-16">
         <div
           ref={trackRef}
-          className="flex gap-6 will-change-transform"
+          className="flex gap-5 will-change-transform"
           style={{ width: 'max-content' }}
         >
           {SERVICES.map((s, i) => (
             <ServiceCard key={s.num} s={s} index={i} />
           ))}
-          {/* Trailing spacer */}
           <div className="w-16 shrink-0" />
         </div>
       </div>
@@ -152,42 +139,21 @@ function ServiceCard({ s, index }: { s: typeof SERVICES[0]; index: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.7, delay: index * 0.08, ease: EASE_CINEMATIC }}
-      className="group relative flex w-[340px] shrink-0 flex-col rounded-3xl border border-white/10 bg-white/[0.04] p-8 transition-all duration-300 hover:-translate-y-1.5 hover:border-[rgba(0,229,255,0.40)] hover:bg-[rgba(0,229,255,0.06)]"
+      className="group flex w-[360px] shrink-0 flex-col rounded-xl border border-white/[0.10] bg-[#0d0d0d] p-8 transition-all duration-300 hover:border-white/[0.15] hover:-translate-y-[3px] will-change-transform"
       style={{ minHeight: 320 }}
     >
-      {/* Top border on hover */}
-      <div
-        className="absolute inset-x-0 top-0 h-px rounded-t-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        style={{ background: 'linear-gradient(90deg, #00E5FF, #0EA5E9)' }}
-      />
-
-      <span
-        className="font-syne text-3xl font-bold tracking-tight"
-        style={{ color: '#00E5FF' }}
-      >
+      <span className="font-syne text-3xl font-bold tracking-tight text-white/15">
         {s.num}
       </span>
 
-      <div
-        className="mt-5 flex h-12 w-12 items-center justify-center rounded-2xl"
-        style={{ background: 'rgba(0,229,255,0.10)', color: '#00E5FF' }}
-      >
-        <s.icon className="h-6 w-6" />
+      <div className="mt-5 flex h-11 w-11 items-center justify-center rounded-xl border border-white/[0.10]">
+        <s.icon className="h-5 w-5 text-white/50" />
       </div>
 
       <h3 className="mt-5 font-syne text-xl font-semibold text-white">{s.title}</h3>
-      <p className="mt-3 font-inter text-sm font-light leading-relaxed text-white/50">
+      <p className="mt-3 font-inter text-sm font-light leading-[1.75] text-white/45">
         {s.description}
       </p>
-
-      <div className="mt-auto pt-6">
-        <span
-          className="font-inter text-sm font-medium opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          style={{ color: '#00E5FF' }}
-        >
-          Learn more →
-        </span>
-      </div>
     </motion.div>
   )
 }

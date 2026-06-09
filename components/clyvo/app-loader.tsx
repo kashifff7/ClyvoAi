@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 
-const DARK = '#020205'
+const DARK = '#000000'
 
 export function AppLoader({ children }: { children: React.ReactNode }) {
   const [done, setDone] = useState(false)
@@ -60,22 +60,23 @@ export function AppLoader({ children }: { children: React.ReactNode }) {
               }}
             >
               <motion.div
-                style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: 14,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: 24,
-                  fontWeight: 700,
-                  color: DARK,
-                  background: 'linear-gradient(135deg, #00E5FF, #0EA5E9)',
-                }}
+                style={{ width: 56, height: 56 }}
                 animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
               >
-                C
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/logo.png"
+                  alt="Clyvo AI"
+                  width={56}
+                  height={56}
+                  style={{
+                    objectFit:    'contain',
+                    filter:       'invert(1) sepia(1) saturate(5) hue-rotate(155deg) drop-shadow(0 0 8px rgba(0,229,255,0.95)) drop-shadow(0 0 24px rgba(0,229,255,0.55)) drop-shadow(0 0 48px rgba(0,229,255,0.20))',
+                    mixBlendMode: 'screen',
+                    animation:    'logo-float-3d 5s ease-in-out infinite',
+                  }}
+                />
               </motion.div>
             </div>
 

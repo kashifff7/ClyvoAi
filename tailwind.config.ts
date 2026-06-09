@@ -9,13 +9,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background:          "rgb(2 2 5 / <alpha-value>)",
-        foreground:          "rgb(239 239 239 / <alpha-value>)",
-        card:                "rgb(10 10 14 / <alpha-value>)",
-        "card-foreground":   "rgb(239 239 239 / <alpha-value>)",
-        secondary:           "rgb(18 18 24 / <alpha-value>)",
-        "muted-foreground":  "rgb(239 239 239 / 0.40)",
-        border:              "rgb(255 255 255 / 0.08)",
+        background:          "rgb(0 0 0 / <alpha-value>)",
+        foreground:          "rgb(255 255 255 / <alpha-value>)",
+        card:                "rgb(10 10 10 / <alpha-value>)",
+        "card-foreground":   "rgb(255 255 255 / <alpha-value>)",
+        secondary:           "rgb(10 10 10 / <alpha-value>)",
+        "muted-foreground":  "rgb(255 255 255 / 0.35)",
+        border:              "rgb(255 255 255 / 0.07)",
         // Accent palette — no violet/purple
         cyan:    "rgb(0 229 255 / <alpha-value>)",
         sky:     "rgb(14 165 233 / <alpha-value>)",

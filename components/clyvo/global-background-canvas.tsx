@@ -4,19 +4,13 @@ import { useRef, useMemo, useEffect } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 
-// Deterministic particle seeds — no Math.random()
-const PARTICLE_COUNT = 200
+const PARTICLE_COUNT = 60
 const SEEDS = Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
   x: (((i * 9301 + 49297) % 233280) / 233280 - 0.5) * 24,
   y: (((i * 6271 + 49297) % 233280) / 233280 - 0.5) * 24,
   z: (((i * 1103 + 49297) % 233280) / 233280 - 0.5) * 6,
 }))
 
-const CYAN  = new THREE.Color('#00E5FF')
-const SKY   = new THREE.Color('#0EA5E9')
-const AMBER = new THREE.Color('#F59E0B')
-
-// Build a circular soft-glow texture so particles render as circles, not squares
 function buildCircleTexture(): THREE.CanvasTexture {
   const size = 64
   const canvas = document.createElement('canvas')
@@ -34,12 +28,8 @@ function buildCircleTexture(): THREE.CanvasTexture {
 }
 
 function ParticleField() {
-  const pointsRef   = useRef<THREE.Points>(null)
-  const materialRef = useRef<THREE.PointsMaterial>(null)
-  const mouseTarget  = useRef({ x: 0, y: 0 })
-  const scrollRef    = useRef(0)
-  // Avoid allocating Color every frame
-  const lerpColor    = useRef(new THREE.Color())
+  const pointsRef  = useRef<THREE.Points>(null)
+  const mouseTarget = useRef({ x: 0, y: 0 })
 
   const { size } = useThree()
 
@@ -53,7 +43,6 @@ function ParticleField() {
     return arr
   }, [])
 
-  // Circular glow texture — built once in the browser
   const circleTexture = useMemo(() => buildCircleTexture(), [])
 
   useEffect(() => {
@@ -61,43 +50,24 @@ function ParticleField() {
       mouseTarget.current.x =  (e.clientX / window.innerWidth  - 0.5) * 1.2
       mouseTarget.current.y =  (e.clientY / window.innerHeight - 0.5) * 0.8
     }
-    const onScroll = () => {
-      scrollRef.current = window.scrollY / Math.max(1, document.body.scrollHeight - window.innerHeight)
-    }
     window.addEventListener('mousemove', onMouseMove, { passive: true })
-    window.addEventListener('scroll',    onScroll,    { passive: true })
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove)
-      window.removeEventListener('scroll',    onScroll)
-    }
+    return () => window.removeEventListener('mousemove', onMouseMove)
   }, [])
 
   useFrame(({ clock }) => {
     const pts = pointsRef.current
-    const mat = materialRef.current
-    if (!pts || !mat) return
+    if (!pts) return
 
     const t = clock.getElapsedTime()
 
-    // Gentle rotation drift
     pts.rotation.y = t * 0.008
     pts.rotation.x = Math.sin(t * 0.003) * 0.06
 
-    // Smooth mouse parallax
     pts.position.x += (mouseTarget.current.x * 0.6 - pts.position.x) * 0.025
     pts.position.y += (-mouseTarget.current.y * 0.4 - pts.position.y) * 0.025
-
-    // Scroll-based color shift: cyan → sky → amber
-    const p = scrollRef.current
-    if (p < 0.5) {
-      lerpColor.current.lerpColors(CYAN, SKY, p * 2)
-    } else {
-      lerpColor.current.lerpColors(SKY, AMBER, (p - 0.5) * 2)
-    }
-    mat.color.copy(lerpColor.current)
   })
 
-  const pointSize = Math.min(0.14, (size.width / 1920) * 0.18)
+  const pointSize = Math.min(0.13, (size.width / 1920) * 0.16)
 
   return (
     <points ref={pointsRef}>
@@ -108,12 +78,11 @@ function ParticleField() {
         />
       </bufferGeometry>
       <pointsMaterial
-        ref={materialRef}
         map={circleTexture}
         size={pointSize}
-        color="#00E5FF"
+        color="#ffffff"
         transparent
-        opacity={0.55}
+        opacity={0.40}
         sizeAttenuation
         depthWrite={false}
         alphaTest={0.02}

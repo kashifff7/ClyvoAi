@@ -48,8 +48,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${syne.variable} ${inter.variable} ${jetbrainsMono.variable}`} style={{ background: '#020205' }}>
-      <body className="text-[#EFEFEF] antialiased" style={{ background: '#020205', minHeight: '100vh' }}>
+    <html lang="en" className={`${syne.variable} ${inter.variable} ${jetbrainsMono.variable}`} style={{ background: '#000000' }}>
+      <body className="text-white antialiased" style={{ background: '#000000', minHeight: '100vh' }}>
         <Providers>
           <AppLoader>
             {children}

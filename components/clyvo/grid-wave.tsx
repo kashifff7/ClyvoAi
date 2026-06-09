@@ -49,7 +49,7 @@ function TileWave() {
     for (let i = 0; i < COUNT; i++) {
       const { x, z, phase } = TILE_DATA[i]
       // Wave formula specified: y = sin(time + x*0.5 + z*0.5) * 0.6
-      dummy.position.set(x, Math.sin(t + phase) * 0.6, z)
+      dummy.position.set(x, Math.sin(t * 0.35 + phase) * 1.8, z)
       dummy.updateMatrix()
       mesh.setMatrixAt(i, dummy.matrix)
     }
@@ -73,7 +73,7 @@ export default function GridWave() {
         inset:         0,
         zIndex:        0,
         pointerEvents: 'none',
-        opacity:       0.4,
+        opacity:       0.35,
       }}
     >
       <Canvas

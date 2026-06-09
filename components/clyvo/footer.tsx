@@ -1,3 +1,33 @@
+import Image from 'next/image'
+
+const LOGO_FILTER = [
+  'invert(1)',
+  'sepia(1)',
+  'saturate(5)',
+  'hue-rotate(155deg)',
+  'drop-shadow(0 0 5px rgba(0,229,255,0.95))',
+  'drop-shadow(0 0 14px rgba(0,229,255,0.60))',
+  'drop-shadow(0 0 28px rgba(0,229,255,0.25))',
+].join(' ')
+
+function LogoBadge() {
+  return (
+    <Image
+      src="/logo.png"
+      alt="Clyvo AI"
+      width={32}
+      height={32}
+      style={{
+        objectFit:    'contain',
+        flexShrink:   0,
+        filter:       LOGO_FILTER,
+        mixBlendMode: 'screen',
+        animation:    'logo-float-3d 5s ease-in-out infinite',
+      }}
+    />
+  )
+}
+
 const NAV_LINKS = [
   { href: '#solutions',    label: 'Solutions' },
   { href: '#how-it-works', label: 'How It Works' },
@@ -6,35 +36,15 @@ const NAV_LINKS = [
   { href: '#contact',      label: 'Apply' },
 ]
 
-// Section hover accent colors matching each nav section
-const LINK_ACCENTS: Record<string, string> = {
-  '#solutions':    '#F43F5E',
-  '#how-it-works': '#10B981',
-  '#pricing':      '#00E5FF',
-  '#about':        '#F59E0B',
-  '#contact':      '#0EA5E9',
-}
-
-const LOGO_GRADIENT  = 'linear-gradient(135deg, #00E5FF, #0EA5E9)'
-const TOP_GRADIENT   = 'linear-gradient(90deg, #00E5FF, #0EA5E9, #F59E0B, #10B981)'
-
 export function Footer() {
   return (
-    <footer className="relative bg-transparent">
-      {/* Top gradient line — full spectrum */}
-      <div className="h-px w-full" style={{ background: TOP_GRADIENT }} />
-
+    <footer className="relative border-t border-white/[0.06] bg-transparent">
       {/* Main footer row */}
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-10 px-6 py-16 text-center sm:flex-row sm:items-start sm:justify-between sm:text-left">
         {/* Brand */}
         <div className="flex flex-col items-center gap-3 sm:items-start">
           <a href="#home" className="flex items-center gap-2.5">
-            <span
-              className="flex h-7 w-7 items-center justify-center rounded-lg text-sm font-bold text-[#020205]"
-              style={{ background: LOGO_GRADIENT }}
-            >
-              C
-            </span>
+            <LogoBadge />
             <span className="font-syne text-lg font-semibold text-white">Clyvo</span>
             <span className="font-syne text-lg font-semibold" style={{ color: '#00E5FF' }}>AI</span>
           </a>
@@ -48,32 +58,26 @@ export function Footer() {
               <li key={link.href + link.label}>
                 <a
                   href={link.href}
-                  className="group font-inter text-sm text-white/40 transition-colors duration-200"
+                  className="font-inter text-sm text-white/40 transition-colors duration-200 hover:text-white/70"
                 >
-                  <span
-                    className="transition-[color] duration-200 group-hover:text-white/80"
-                    style={{ ['--accent' as string]: LINK_ACCENTS[link.href] ?? '#00E5FF' }}
-                  >
-                    {link.label}
-                  </span>
+                  {link.label}
                 </a>
               </li>
             ))}
           </ul>
         </nav>
 
-        {/* CTA */}
+        {/* CTA — clean white */}
         <a
           href="#contact"
-          className="shrink-0 rounded-full px-5 py-2.5 font-inter text-sm font-medium text-[#020205] transition-all duration-300 hover:opacity-90 hover:scale-[1.02]"
-          style={{ background: LOGO_GRADIENT }}
+          className="shrink-0 rounded-full bg-white px-5 py-2.5 font-inter text-sm font-medium text-black transition-all duration-300 hover:bg-white/90 hover:scale-[1.02]"
         >
           Book a Discovery Call
         </a>
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-white/8">
+      <div className="border-t border-white/[0.06]">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-5 font-inter text-xs text-white/20 sm:flex-row">
           <p>© 2026 Clyvo AI. All rights reserved.</p>
           <div className="flex gap-6">

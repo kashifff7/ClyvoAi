@@ -28,55 +28,39 @@ function StepItem({
   const sliceStart = 0.08 + (index / total) * 0.78
   const sliceEnd   = sliceStart + 0.10
 
-  // 0 = upcoming, 1 = active, fades to 0.4 once passed
   const numOpacity = useTransform(
     progress,
     [Math.max(0, sliceStart - 0.03), sliceEnd, Math.min(1, sliceEnd + 0.28)],
-    [0.20, 1, 0.40]
+    [0.15, 0.90, 0.40]
   )
   const contentOpacity = useTransform(progress, [sliceStart, sliceEnd], [0, 1])
   const contentX       = useTransform(progress, [sliceStart, sliceEnd], [28, 0])
 
-  // Is the step "active" (currently in focus)?
   const dotScale = useTransform(
     progress,
     [Math.max(0, sliceStart - 0.02), sliceEnd, Math.min(1, sliceEnd + 0.15)],
     [0.6, 1.4, 1.0]
   )
-  const dotGlow  = useTransform(
-    progress,
-    [Math.max(0, sliceStart - 0.02), sliceEnd, Math.min(1, sliceEnd + 0.15)],
-    [0, 1, 0.3]
-  )
-  // Passed = completed
-  const isCompleted = useTransform(progress, (v) => v > sliceEnd + 0.05)
+  const completedOpacity = useTransform(progress, (v) => (v > sliceEnd + 0.05 ? 1 : 0))
 
   return (
-    <div className="relative grid items-start gap-6 border-t border-white/8 py-10 first:border-0 first:pt-0 sm:grid-cols-[80px_1fr]">
+    <div className="relative grid items-start gap-6 border-t border-white/[0.06] py-10 first:border-0 first:pt-0 sm:grid-cols-[80px_1fr]">
       {/* Connector dot on left rail */}
       <motion.div
-        className="absolute -left-[1.375rem] top-10 h-2.5 w-2.5 rounded-full first:top-0"
+        className="absolute -left-[1.375rem] top-10 h-2.5 w-2.5 rounded-full"
         style={{
           scale: dotScale,
           background: '#00E5FF',
-          boxShadow: useTransform(dotGlow, (v) => `0 0 ${v * 16}px ${v * 6}px rgba(0,229,255,0.6)`),
         }}
       />
 
       {/* Step number */}
-      <motion.div
-        className="relative flex items-center gap-2"
-        style={{ opacity: numOpacity }}
-      >
-        <motion.span
-          className="font-mono text-4xl font-bold leading-none tracking-tight"
-          style={{ color: '#00E5FF' }}
-        >
+      <motion.div className="relative flex items-center gap-2" style={{ opacity: numOpacity }}>
+        <span className="font-syne text-4xl font-bold leading-none tracking-tight text-white">
           {step.num}
-        </motion.span>
-        {/* Checkmark when completed */}
-        <motion.div style={{ opacity: useTransform(isCompleted, (v) => (v ? 1 : 0)) }}>
-          <Check className="h-4 w-4" style={{ color: '#10B981' }} />
+        </span>
+        <motion.div style={{ opacity: completedOpacity }}>
+          <Check className="h-4 w-4 text-white/50" />
         </motion.div>
       </motion.div>
 
@@ -86,7 +70,7 @@ function StepItem({
         className="will-change-transform"
       >
         <h3 className="font-syne text-xl font-semibold text-white">{step.title}</h3>
-        <p className="mt-2 font-inter text-base font-light leading-relaxed text-white/50">
+        <p className="mt-2 font-inter text-base font-light leading-[1.75] text-white/45">
           {step.description}
         </p>
       </motion.div>
@@ -104,21 +88,10 @@ export function OperatingLayerScene() {
   const lineScaleY = useTransform(scrollYProgress, [0.05, 0.90], [0, 1])
 
   return (
-    <section ref={sectionRef} id="how-it-works-scene" className="relative px-6 py-32 sm:py-44">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+    <section ref={sectionRef} id="how-it-works-scene" className="relative px-6 py-32 md:py-40">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.07] to-transparent" />
 
-      {/* Cyan left glow */}
-      <div
-        className="pointer-events-none absolute -left-40 top-1/4 h-[480px] w-[480px] rounded-full"
-        style={{ background: '#00E5FF', opacity: 0.05, filter: 'blur(180px)' }}
-      />
-      {/* Green right glow */}
-      <div
-        className="pointer-events-none absolute -right-40 bottom-1/4 h-[400px] w-[400px] rounded-full"
-        style={{ background: '#10B981', opacity: 0.06, filter: 'blur(180px)' }}
-      />
-
-      <div className="relative mx-auto max-w-5xl">
+      <div className="relative mx-auto max-w-6xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, x: -40 }}
@@ -127,16 +100,13 @@ export function OperatingLayerScene() {
           transition={{ duration: 0.9, ease: EASE_CINEMATIC }}
           className="mb-16"
         >
-          <span className="gradient-label font-mono text-xs font-medium uppercase tracking-[0.2em]">
+          <span className="font-inter font-medium text-[11px] uppercase tracking-[0.18em] text-white/35">
             How It Works
           </span>
-          <h2
-            className="mt-5 text-balance font-syne font-bold tracking-[-0.03em] text-white"
-            style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)' }}
-          >
+          <h2 className="mt-5 text-balance font-syne text-4xl font-bold tracking-[-0.03em] text-white md:text-5xl lg:text-6xl">
             A process built for results, not risk.
           </h2>
-          <p className="mt-5 max-w-xl font-inter text-base font-light text-white/50">
+          <p className="mt-5 max-w-xl font-inter text-base font-light leading-[1.75] text-white/45">
             Six clear stages, full transparency throughout — from the first call to live and beyond.
           </p>
         </motion.div>
@@ -145,10 +115,18 @@ export function OperatingLayerScene() {
         <div className="flex gap-10 sm:gap-16">
           {/* Vertical progress line */}
           <div className="relative hidden shrink-0 flex-col items-center sm:flex" style={{ width: 2 }}>
-            <div className="absolute inset-0 rounded-full bg-white/8" />
+            <div
+              className="absolute inset-0 rounded-full"
+              style={{ background: 'rgba(255,255,255,0.08)' }}
+            />
             <motion.div
-              className="timeline-line absolute top-0 w-full rounded-full will-change-transform"
-              style={{ scaleY: lineScaleY, transformOrigin: 'top', height: '100%' }}
+              className="absolute top-0 w-full rounded-full will-change-transform"
+              style={{
+                scaleY: lineScaleY,
+                transformOrigin: 'top',
+                height: '100%',
+                background: '#00E5FF',
+              }}
             />
           </div>
 
