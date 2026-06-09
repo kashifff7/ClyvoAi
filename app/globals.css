@@ -3,25 +3,162 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg:      #020205;
+  --surface: rgba(255,255,255,0.03);
+  --border:  rgba(255,255,255,0.08);
+  --text:    #EFEFEF;
+  --muted:   rgba(239,239,239,0.4);
+  --cyan:    #00E5FF;
+  --sky:     #0EA5E9;
+  --rose:    #F43F5E;
+  --amber:   #F59E0B;
+  --green:   #10B981;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* { border-color: rgba(255,255,255,0.08); }
+
+/* Hard-coded background so the page is never white, even before CSS vars resolve */
+html,
+body {
+  background: #020205;
 }
+
+html { scroll-behavior: auto; }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  font-feature-settings: "cv11","ss01";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  /* ── Gradient text — cyan→sky ── */
+  .gradient-label {
+    background: linear-gradient(135deg, #00E5FF, #0EA5E9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Rose gradient text (problem section) ── */
+  .gradient-rose {
+    background: linear-gradient(135deg, #F43F5E, #FB7185);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Premium card hover — cyan/sky top border ── */
+  .premium-card {
+    position: relative;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.10);
+    transition: background 0.4s ease, border-color 0.4s ease,
+                transform 0.4s ease, box-shadow 0.4s ease;
+  }
+  .premium-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, #00E5FF, #0EA5E9);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    border-radius: inherit;
+  }
+  .premium-card:hover {
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,255,255,0.18);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0,229,255,0.08);
+  }
+  .premium-card:hover::before { opacity: 1; }
+
+  /* ── Problem card — rose left border reveal ── */
+  .problem-card {
+    position: relative;
+    overflow: hidden;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.10);
+    transition: background 0.4s ease, border-color 0.4s ease,
+                transform 0.4s ease, box-shadow 0.4s ease;
+  }
+  .problem-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0;
+    width: 2px; height: 100%;
+    background: linear-gradient(180deg, #F43F5E, #FB7185);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.35s ease;
+  }
+  .problem-card:hover {
+    background: rgba(244,63,94,0.04);
+    border-color: rgba(244,63,94,0.20);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(244,63,94,0.10);
+  }
+  .problem-card:hover::before { transform: scaleY(1); }
+
+  /* ── Nav link underline slide — cyan ── */
+  .nav-link { position: relative; }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0; right: 0;
+    height: 1px;
+    background: #00E5FF;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+  .nav-link:hover::after { transform: scaleX(1); }
+
+  /* ── 60px hero grid ── */
+  .hero-grid {
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 40%, black 0%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 40%, black 0%, transparent 100%);
+  }
+
+  /* ── Skeleton shimmer ── */
+  .shimmer-bar {
+    position: relative;
+    overflow: hidden;
+    background: rgba(255,255,255,0.06);
+  }
+  .shimmer-bar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
+    animation: shimmer 2.2s ease-in-out infinite;
+  }
+
+  /* ── Scroll timeline line — cyan→green ── */
+  .timeline-line {
+    background: linear-gradient(180deg, #00E5FF, #10B981);
+  }
+
+  /* ── Performance hints ── */
+  .will-change-transform { will-change: transform; }
+
+  /* ── Button active state ── */
+  button, a { cursor: pointer; }
+  .btn-active:active { transform: scale(0.97); }
+
+  /* ── Aurora strip animation ── */
+  @keyframes aurora-rotate {
+    0%   { transform: rotate(-15deg) translateX(-100%); }
+    100% { transform: rotate(-15deg) translateX(200vw); }
+  }
+  .aurora-strip {
+    animation: aurora-rotate 8s linear infinite;
   }
 }
