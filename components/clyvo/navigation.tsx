@@ -260,11 +260,11 @@ export function Navigation() {
                 {mobileExpanded && (
                   <motion.div
                     key="mobile-solutions"
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: E }}
-                    className="overflow-hidden"
+                    initial={{ maxHeight: 0, opacity: 0 }}
+                    animate={{ maxHeight: 300, opacity: 1 }}
+                    exit={{ maxHeight: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    style={{ overflow: 'hidden' }}
                   >
                     <div className="flex flex-col">
                       {SERVICES.map((s) => (
@@ -272,7 +272,7 @@ export function Navigation() {
                           key={s.href}
                           href={s.href}
                           onClick={closeMobile}
-                          className="pl-6 py-2 font-inter text-base text-white/50 transition-colors hover:text-white"
+                          className="block w-full pl-8 py-3 font-inter text-sm text-white/50 transition-colors hover:text-white"
                         >
                           {s.name}
                         </a>

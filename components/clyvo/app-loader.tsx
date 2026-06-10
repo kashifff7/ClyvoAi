@@ -60,7 +60,8 @@ export function AppLoader({ children }: { children: React.ReactNode }) {
               }}
             >
               <motion.div
-                style={{ width: 56, height: 56 }}
+                className="flex h-20 w-20 items-center justify-center rounded-full"
+                style={{ boxShadow: '0 0 60px rgba(0,229,255,0.5), 0 0 120px rgba(0,229,255,0.25)' }}
                 animate={{ opacity: [0.5, 1, 0.5] }}
                 transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
               >
@@ -68,8 +69,9 @@ export function AppLoader({ children }: { children: React.ReactNode }) {
                 <img
                   src="/logo.png"
                   alt="Clyvo AI"
-                  width={56}
-                  height={56}
+                  width={80}
+                  height={80}
+                  className="h-20 w-20"
                   style={{
                     objectFit:    'contain',
                     filter:       'invert(1) sepia(1) saturate(5) hue-rotate(155deg) drop-shadow(0 0 8px rgba(0,229,255,0.95)) drop-shadow(0 0 24px rgba(0,229,255,0.55)) drop-shadow(0 0 48px rgba(0,229,255,0.20))',
