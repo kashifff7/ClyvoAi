@@ -48,8 +48,6 @@ export default function Home() {
           <HeroContent />
         </div>
 
-        <SectionWipe from="#000000" to="#0a0800" />
-
         {/* Problem */}
         <div id="solutions">
           <ProblemScene />
