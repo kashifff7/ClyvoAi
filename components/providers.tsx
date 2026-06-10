@@ -8,6 +8,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
 
+    // Disable Lenis smooth scroll on mobile — causes jank on iOS/Android
+    if (window.innerWidth < 768) return
+
     let lenis: { raf: (t: number) => void; on: (event: string, cb: () => void) => void; destroy: () => void } | null = null
     let rafId: number
 
@@ -18,16 +21,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
         smoothWheel: true,
       } as ConstructorParameters<typeof Lenis>[0])
 
-      // Connect Lenis scroll events to GSAP ScrollTrigger
       lenis.on('scroll', () => ScrollTrigger.update())
 
-      // Drive Lenis via GSAP's ticker so ScrollTrigger pinning stays in sync
       gsap.ticker.add((time) => {
         lenis?.raf(time * 1000)
       })
       gsap.ticker.lagSmoothing(0)
 
-      // Also keep a native RAF fallback for initial load
       function raf(time: number) {
         rafId = requestAnimationFrame(raf)
         void time

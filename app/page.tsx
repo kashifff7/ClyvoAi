@@ -25,7 +25,7 @@ const FutureScene = dynamic(() =>
 
 export default function Home() {
   return (
-    <main className="relative">
+    <main className="relative overflow-x-hidden">
       {/* Fixed ambient background — orbs + grid */}
       <GlobalBackground />
 

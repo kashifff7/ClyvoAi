@@ -243,11 +243,11 @@ export function Navigation() {
               Book a Discovery Call
             </a>
 
-            {/* Mobile hamburger */}
+            {/* Mobile hamburger — 44px touch target */}
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
-              className="ml-1 flex h-8 w-8 items-center justify-center rounded-full text-white/50 hover:text-white md:hidden"
+              className="ml-1 flex h-11 w-11 items-center justify-center rounded-full text-white/50 hover:text-white md:hidden"
               aria-label="Open menu"
             >
               <Menu className="h-4 w-4" />
@@ -289,7 +289,7 @@ export function Navigation() {
               <button
                 type="button"
                 onClick={closeMobile}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/50 hover:text-white"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white/50 hover:text-white"
                 aria-label="Close menu"
               >
                 <X className="h-4 w-4" />
@@ -347,8 +347,8 @@ export function Navigation() {
                   key={link.href}
                   href={link.href}
                   onClick={closeMobile}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.05 * i, duration: 0.4, ease: E }}
                   className="rounded-xl px-5 py-4 font-syne text-2xl font-bold text-white/60 transition-colors hover:bg-white/[0.04] hover:text-white"
                 >

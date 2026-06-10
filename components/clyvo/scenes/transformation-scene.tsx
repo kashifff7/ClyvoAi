@@ -6,6 +6,7 @@ import { EASE_CINEMATIC } from '@/lib/utils'
 import { Bot, Workflow, Brain, Phone, Plug } from 'lucide-react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useIsMobile } from '@/lib/device'
 
 const SERVICES = [
   {
@@ -38,8 +39,12 @@ const SERVICES = [
 export function TransformationScene() {
   const sectionRef = useRef<HTMLElement>(null)
   const trackRef   = useRef<HTMLDivElement>(null)
+  const isMobile   = useIsMobile()
 
   useEffect(() => {
+    // Check synchronously — skip GSAP pin entirely on mobile
+    if (window.innerWidth < 768) return
+
     gsap.registerPlugin(ScrollTrigger)
 
     const section = sectionRef.current
@@ -73,31 +78,31 @@ export function TransformationScene() {
       ref={sectionRef}
       id="services-scene"
       className="relative overflow-hidden"
-      style={{ height: '100vh' }}
+      style={{ height: isMobile ? 'auto' : '100vh' }}
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.07] to-transparent" />
 
-      {/* Header — left-aligned */}
-      <div className="relative px-8 pb-10 pt-20 md:px-16">
+      {/* Header */}
+      <div className="relative px-5 pb-8 pt-16 md:px-16 md:pb-10 md:pt-20">
         <motion.span
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.8 }}
-          transition={{ duration: 0.7, ease: EASE_CINEMATIC }}
+          transition={{ duration: 0.5, ease: EASE_CINEMATIC }}
           className="font-inter font-medium text-[11px] uppercase tracking-[0.18em] text-white/35"
         >
           What We Build
         </motion.span>
 
-        <h2 className="mt-5 font-syne text-4xl font-bold tracking-[-0.03em] text-white md:text-5xl lg:text-6xl">
+        <h2 className="mt-4 font-syne text-2xl font-bold tracking-[-0.03em] text-white sm:text-3xl md:text-5xl">
           {['Five', 'capabilities.', 'Infinite', 'applications.'].map((word, i) => (
             <motion.span
               key={word}
               className="mr-[0.22em] inline-block last:mr-0"
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.6 }}
-              transition={{ duration: 0.8, delay: i * 0.06, ease: EASE_CINEMATIC }}
+              transition={{ duration: 0.6, delay: i * 0.06, ease: EASE_CINEMATIC }}
             >
               {word}
             </motion.span>
@@ -105,42 +110,59 @@ export function TransformationScene() {
         </h2>
 
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.6 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: EASE_CINEMATIC }}
-          className="mt-4 max-w-xl font-inter text-base font-light text-white/45"
+          transition={{ duration: 0.6, delay: 0.25, ease: EASE_CINEMATIC }}
+          className="mt-3 max-w-xl font-inter text-sm font-light text-white/45 md:text-base"
         >
           Every engagement is built from scratch around your business.
         </motion.p>
       </div>
 
-      {/* Horizontal scrolling track */}
-      <div className="relative overflow-visible px-8 md:px-16">
-        <div
-          ref={trackRef}
-          className="flex gap-5 will-change-transform"
-          style={{ width: 'max-content' }}
-        >
+      {/* Cards — vertical stack on mobile, horizontal scroll on desktop */}
+      {isMobile ? (
+        <div className="flex flex-col gap-4 px-5 pb-16">
           {SERVICES.map((s, i) => (
-            <ServiceCard key={s.num} s={s} index={i} />
+            <ServiceCard key={s.num} s={s} index={i} fullWidth />
           ))}
-          <div className="w-16 shrink-0" />
         </div>
-      </div>
+      ) : (
+        <div className="relative overflow-visible px-8 md:px-16">
+          <div
+            ref={trackRef}
+            className="flex gap-5 will-change-transform"
+            style={{ width: 'max-content' }}
+          >
+            {SERVICES.map((s, i) => (
+              <ServiceCard key={s.num} s={s} index={i} />
+            ))}
+            <div className="w-16 shrink-0" />
+          </div>
+        </div>
+      )}
     </section>
   )
 }
 
-function ServiceCard({ s, index }: { s: typeof SERVICES[0]; index: number }) {
+function ServiceCard({
+  s,
+  index,
+  fullWidth = false,
+}: {
+  s: typeof SERVICES[0]
+  index: number
+  fullWidth?: boolean
+}) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.7, delay: index * 0.08, ease: EASE_CINEMATIC }}
-      className="group flex w-[360px] shrink-0 flex-col rounded-xl border border-white/[0.10] bg-[#0d0d0d] p-8 transition-all duration-300 hover:border-white/[0.15] hover:-translate-y-[3px] will-change-transform"
-      style={{ minHeight: 320 }}
+      transition={{ duration: 0.5, delay: index * 0.06, ease: EASE_CINEMATIC }}
+      className={`group flex shrink-0 flex-col rounded-xl border border-white/[0.10] bg-[#0d0d0d] p-7 transition-all duration-300 hover:border-white/[0.15] hover:-translate-y-[3px] will-change-transform
+        ${fullWidth ? 'w-full' : 'w-[360px]'}`}
+      style={{ minHeight: fullWidth ? undefined : 320 }}
     >
       <span className="font-syne text-3xl font-bold tracking-tight text-white/15">
         {s.num}
@@ -150,10 +172,17 @@ function ServiceCard({ s, index }: { s: typeof SERVICES[0]; index: number }) {
         <s.icon className="h-5 w-5 text-white/50" />
       </div>
 
-      <h3 className="mt-5 font-syne text-xl font-semibold text-white">{s.title}</h3>
+      <h3 className="mt-5 font-syne text-lg font-semibold text-white md:text-xl">{s.title}</h3>
       <p className="mt-3 font-inter text-sm font-light leading-[1.75] text-white/45">
         {s.description}
       </p>
+
+      <a
+        href={`/services/${s.num === '01' ? 'ai-chatbots' : s.num === '02' ? 'workflow-automation' : s.num === '03' ? 'custom-ai-models' : s.num === '04' ? 'voice-agents' : 'system-integrations'}`}
+        className="mt-auto pt-6 font-inter text-xs text-white/30 underline-offset-2 transition-colors hover:text-[#00E5FF]"
+      >
+        Learn more →
+      </a>
     </motion.div>
   )
 }

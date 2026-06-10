@@ -26,7 +26,7 @@ const inputBase: React.CSSProperties = {
   borderRadius: 10,
   color: '#fff',
   fontFamily: 'var(--font-inter)',
-  fontSize: 14,
+  fontSize: 16,
   padding: '12px 16px',
   outline: 'none',
   transition: 'border-color 0.2s',

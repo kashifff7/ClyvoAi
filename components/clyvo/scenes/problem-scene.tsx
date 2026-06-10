@@ -21,26 +21,26 @@ const ALTERNATIVES = [
 
 export function ProblemScene() {
   return (
-    <section id="solutions-scene" className="relative px-6 py-32 md:py-40">
+    <section id="solutions-scene" className="relative w-full overflow-hidden px-4 py-14 sm:px-6 md:px-8 md:py-32">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.07] to-transparent" />
 
       <div className="relative mx-auto max-w-6xl">
-        <div className="grid items-start gap-16 lg:grid-cols-[1fr_440px]">
+        <div className="grid items-start gap-12 lg:grid-cols-[1fr_440px] lg:gap-16">
 
           {/* Left */}
           <motion.div
-            initial={{ opacity: 0, x: -60 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.9, ease: EASE_CINEMATIC }}
+            transition={{ duration: 0.6, ease: EASE_CINEMATIC }}
           >
             <span className="font-inter font-medium text-[11px] uppercase tracking-[0.18em] text-white/35">
               The Problem
             </span>
-            <h2 className="mt-5 text-balance font-syne text-4xl font-bold leading-tight tracking-[-0.03em] text-white md:text-5xl lg:text-6xl">
+            <h2 className="mt-4 text-balance font-syne text-2xl font-bold leading-tight tracking-[-0.03em] text-white sm:text-3xl md:text-5xl">
               Generic AI wasn&apos;t built for your business.
             </h2>
-            <p className="mt-6 max-w-lg text-balance font-inter text-base font-light leading-[1.75] text-white/45">
+            <p className="mt-5 max-w-lg text-balance font-inter text-sm font-light leading-[1.75] text-white/45 md:text-base">
               Most B2B teams are stuck choosing between two bad options — neither designed
               around how their business actually operates.
             </p>
@@ -51,16 +51,16 @@ export function ProblemScene() {
             {ALTERNATIVES.map((alt, i) => (
               <motion.div
                 key={alt.title}
-                initial={{ opacity: 0, x: 60 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.9, delay: 0.15 * i, ease: EASE_CINEMATIC }}
-                className="rounded-xl border border-white/[0.10] bg-[#0d0d0d] p-7 transition-all duration-300 hover:border-white/[0.15] hover:-translate-y-[3px]"
+                transition={{ duration: 0.6, delay: 0.12 * i, ease: EASE_CINEMATIC }}
+                className="rounded-xl border border-white/[0.10] bg-[#0d0d0d] p-6 transition-all duration-300 hover:border-white/[0.15] hover:-translate-y-[3px] md:p-7"
               >
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.10]">
                   <alt.icon className="h-5 w-5 text-white/50" />
                 </div>
-                <h3 className="mt-5 font-syne text-base font-semibold text-white">{alt.title}</h3>
+                <h3 className="mt-4 font-syne text-base font-semibold text-white">{alt.title}</h3>
                 <p className="mt-2 font-inter text-sm font-light leading-[1.75] text-white/45">
                   {alt.description}
                 </p>
@@ -71,13 +71,13 @@ export function ProblemScene() {
 
         {/* Bottom banner */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.9, delay: 0.2, ease: EASE_CINEMATIC }}
-          className="mt-16 w-full rounded-xl border border-white/[0.10] bg-[#0d0d0d] p-8 text-center md:p-12"
+          transition={{ duration: 0.6, delay: 0.15, ease: EASE_CINEMATIC }}
+          className="mt-12 w-full rounded-xl border border-white/[0.10] bg-[#0d0d0d] p-6 text-center md:mt-16 md:p-12"
         >
-          <p className="font-syne text-2xl font-bold text-white md:text-3xl">
+          <p className="font-syne text-xl font-bold text-white sm:text-2xl md:text-3xl">
             Clyvo AI is the{' '}
             <span style={{ color: '#00E5FF' }}>sharp, expert, custom</span>{' '}
             alternative.
