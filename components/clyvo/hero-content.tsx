@@ -45,15 +45,15 @@ export function HeroContent() {
     offset: ['start start', 'end start'],
   })
 
-  const headlineScale   = useTransform(scrollYProgress, [0, 0.60], [1, 0.7])
-  const headlineOpacity = useTransform(scrollYProgress, [0, 0.55], [1, 0])
-  const subtextOpacity  = useTransform(scrollYProgress, [0, 0.40], [1, 0])
-  const orbScale        = useTransform(scrollYProgress, [0, 0.60], [1, 2])
-  const heroContentY    = useTransform(scrollYProgress, [0, 0.60], [0, -80])
-  const logoY           = useTransform(scrollYProgress, [0, 0.55], [0, -40])
-  const logoOpacity     = useTransform(scrollYProgress, [0, 0.50], [1, 0])
-  const cardX           = useTransform(scrollYProgress, [0, 0.55], [0, 150])
-  const cardOpacity     = useTransform(scrollYProgress, [0, 0.50], [1, 0])
+  const headlineScale   = useTransform(scrollYProgress, [0, 0.90], [1, 0.7])
+  const headlineOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0])
+  const subtextOpacity  = useTransform(scrollYProgress, [0, 0.70], [1, 0])
+  const orbScale        = useTransform(scrollYProgress, [0, 0.90], [1, 2])
+  const heroContentY    = useTransform(scrollYProgress, [0, 0.90], [0, -80])
+  const logoY           = useTransform(scrollYProgress, [0, 0.85], [0, -40])
+  const logoOpacity     = useTransform(scrollYProgress, [0, 0.80], [1, 0])
+  const cardX           = useTransform(scrollYProgress, [0, 0.85], [0, 150])
+  const cardOpacity     = useTransform(scrollYProgress, [0, 0.80], [1, 0])
 
   return (
     <div ref={ref} className="relative h-[150vh] bg-transparent">
