@@ -9,7 +9,7 @@ export function AppLoader({ children }: { children: React.ReactNode }) {
   const [done, setDone] = useState(false)
 
   useEffect(() => {
-    const t = setTimeout(() => setDone(true), 1200)
+    const t = setTimeout(() => setDone(true), 600)
     return () => clearTimeout(t)
   }, [])
 

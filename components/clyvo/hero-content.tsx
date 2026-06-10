@@ -1,10 +1,21 @@
 'use client'
 
 import { useRef } from 'react'
+import Image from 'next/image'
 import { motion, useScroll, useTransform } from 'motion/react'
 import { ArrowRight } from 'lucide-react'
 
 const E = [0.22, 1, 0.36, 1] as const
+
+const LOGO_FILTER = [
+  'invert(1)',
+  'sepia(1)',
+  'saturate(5)',
+  'hue-rotate(155deg)',
+  'drop-shadow(0 0 5px rgba(0,229,255,0.95))',
+  'drop-shadow(0 0 14px rgba(0,229,255,0.60))',
+  'drop-shadow(0 0 28px rgba(0,229,255,0.25))',
+].join(' ')
 
 // Deterministic white particles — fewer on mobile
 const PARTICLES = Array.from({ length: 30 }, (_, i) => {
@@ -37,32 +48,30 @@ export function HeroContent() {
   const headlineScale   = useTransform(scrollYProgress, [0, 0.35], [1, 0.92])
   const headlineOpacity = useTransform(scrollYProgress, [0, 0.40], [1, 0])
   const subtextOpacity  = useTransform(scrollYProgress, [0, 0.25], [1, 0])
-  const orbScale        = useTransform(scrollYProgress, [0, 0.50], [1, 1.40])
+  const orbScale        = useTransform(scrollYProgress, [0, 0.50], [1, 1.20])
+  const heroContentY    = useTransform(scrollYProgress, [0, 0.50], [0, -60])
+  const logoY           = useTransform(scrollYProgress, [0, 0.50], [0, -40])
+  const logoOpacity     = useTransform(scrollYProgress, [0, 0.50], [1, 0])
 
   return (
     <div ref={ref} className="relative min-h-screen overflow-hidden">
-      {/* Animated glows */}
+      {/* Ocean/graphite ambient gradients */}
+      <div className="pointer-events-none absolute inset-0" style={{ background: '#000000' }} />
       <motion.div
         style={{ scale: orbScale }}
         className="pointer-events-none absolute inset-0 will-change-transform"
       >
         <div
-          className="animate-hero-blob-a absolute"
-          style={{
-            right: 0, top: 0,
-            width: 900, height: 900,
-            background: 'radial-gradient(circle, rgba(0,229,255,0.22) 0%, transparent 65%)',
-            filter: 'blur(80px)',
-          }}
+          className="absolute inset-0"
+          style={{ background: 'radial-gradient(ellipse 70% 50% at 65% 55%, rgba(20,20,20,0.9) 0%, transparent 70%)' }}
         />
         <div
-          className="animate-hero-blob-b absolute"
-          style={{
-            left: '-5%', bottom: '-5%',
-            width: 600, height: 600,
-            background: 'radial-gradient(circle, rgba(0,229,255,0.06) 0%, transparent 70%)',
-            filter: 'blur(100px)',
-          }}
+          className="absolute inset-0"
+          style={{ background: 'radial-gradient(ellipse 100% 60% at 50% 100%, rgba(180,180,180,0.04) 0%, transparent 50%)' }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{ background: 'radial-gradient(ellipse 40% 30% at 75% 30%, rgba(0,229,255,0.06) 0%, transparent 60%)' }}
         />
       </motion.div>
 
@@ -100,9 +109,39 @@ export function HeroContent() {
         ))}
       </div>
 
+      {/* Logo moon — glowing Clyvo logo, desktop only */}
+      <motion.div
+        style={{ y: logoY, opacity: logoOpacity }}
+        className="pointer-events-none absolute top-20 right-[6%] hidden md:block md:right-[10%]"
+      >
+        <motion.div
+          animate={{ y: [0, -12, 0], rotate: [0, 5, 0, -5, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+          className="flex h-32 w-32 items-center justify-center rounded-full border md:h-44 md:w-44"
+          style={{
+            background: 'radial-gradient(circle, rgba(0,229,255,0.15) 0%, rgba(0,229,255,0.05) 50%, transparent 70%)',
+            borderColor: 'rgba(0,229,255,0.3)',
+            boxShadow: '0 0 60px rgba(0,229,255,0.4), 0 0 120px rgba(0,229,255,0.2), 0 0 200px rgba(0,229,255,0.08)',
+          }}
+        >
+          <Image
+            src="/logo.png"
+            alt="Clyvo AI"
+            width={64}
+            height={64}
+            className="h-16 w-16 md:h-24 md:w-24"
+            style={{
+              objectFit:    'contain',
+              filter:       LOGO_FILTER,
+              mixBlendMode: 'screen',
+            }}
+          />
+        </motion.div>
+      </motion.div>
+
       {/* Main content — bottom-left aligned */}
       <motion.div
-        style={{ scale: headlineScale, opacity: headlineOpacity, transformOrigin: 'bottom left' }}
+        style={{ scale: headlineScale, opacity: headlineOpacity, y: heroContentY, transformOrigin: 'bottom left' }}
         className="absolute bottom-0 left-5 max-w-[92vw] pb-24 pt-24 will-change-transform sm:left-8 md:left-16 md:pb-32 md:pt-0"
       >
         {/* Badge */}

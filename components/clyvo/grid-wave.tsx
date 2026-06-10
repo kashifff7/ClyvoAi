@@ -29,7 +29,10 @@ function TileWave() {
   const mat = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
-        color:       new THREE.Color('#00E5FF'),
+        color:       new THREE.Color('#1a1a1a'),
+        emissive:    new THREE.Color('#2a2a2a'),
+        metalness:   0.8,
+        roughness:   0.2,
         transparent: true,
         opacity:     0.12,
         wireframe:   false,
@@ -41,15 +44,17 @@ function TileWave() {
   // Dispose on unmount
   useEffect(() => () => { geo.dispose(); mat.dispose() }, [geo, mat])
 
-  useFrame(({ clock }) => {
+  const timeRef = useRef(0)
+
+  useFrame(() => {
     const mesh = meshRef.current
     if (!mesh) return
-    const t = clock.getElapsedTime()
+    timeRef.current += 0.006
 
     for (let i = 0; i < COUNT; i++) {
       const { x, z, phase } = TILE_DATA[i]
-      // Wave formula specified: y = sin(time + x*0.5 + z*0.5) * 0.6
-      dummy.position.set(x, Math.sin(t * 0.35 + phase) * 1.8, z)
+      // Wave formula: y = sin(time + x*0.5 + z*0.5) * 1.8
+      dummy.position.set(x, Math.sin(timeRef.current + phase) * 1.8, z)
       dummy.updateMatrix()
       mesh.setMatrixAt(i, dummy.matrix)
     }
@@ -74,6 +79,8 @@ export default function GridWave() {
         zIndex:        0,
         pointerEvents: 'none',
         opacity:       0.35,
+        maskImage:        'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 60%, transparent 100%)',
+        WebkitMaskImage:  'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 60%, transparent 100%)',
       }}
     >
       <Canvas
@@ -84,6 +91,8 @@ export default function GridWave() {
       >
         <ambientLight intensity={0.6} />
         <directionalLight position={[10, 20, 10]} intensity={1.0} color="#00E5FF" />
+        <pointLight position={[0, 15, 0]} color="#ffffff" intensity={2} />
+        <pointLight position={[10, 8, -10]} color="#00E5FF" intensity={0.5} />
         <TileWave />
       </Canvas>
     </div>

@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { useIsMobile } from '@/lib/device'
 
@@ -15,6 +16,12 @@ const GridWaveCanvas = dynamic(
 
 export function GlobalBackground() {
   const isMobile = useIsMobile()
+  const [canvasReady, setCanvasReady] = useState(false)
+
+  useEffect(() => {
+    const t = setTimeout(() => setCanvasReady(true), 500)
+    return () => clearTimeout(t)
+  }, [])
 
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
@@ -40,8 +47,8 @@ export function GlobalBackground() {
         }}
       />
 
-      {/* Three.js canvas — desktop only */}
-      {!isMobile && (
+      {/* Three.js canvas — desktop only, lazy-mounted after initial render */}
+      {!isMobile && canvasReady && (
         <>
           <div
             className="absolute"

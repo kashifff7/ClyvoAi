@@ -7,7 +7,7 @@ export function PageSkeleton() {
   const [visible, setVisible] = useState(true)
 
   useEffect(() => {
-    const t = setTimeout(() => setVisible(false), 1200)
+    const t = setTimeout(() => setVisible(false), 600)
     return () => clearTimeout(t)
   }, [])
 

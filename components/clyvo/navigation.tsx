@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { Menu, X, ChevronDown, MessageSquare, GitBranch, Cpu, Phone, Link2, ArrowRight } from 'lucide-react'
+import { Menu, X, ChevronDown, MessageSquare, GitBranch, Cpu, Phone, Link2 } from 'lucide-react'
 
 /* ─── Logo filter chain ─────────────────────────────────────── */
 const LOGO_FILTER = [
@@ -68,13 +68,6 @@ const SERVICES = [
   },
 ]
 
-const QUICK_LINKS = [
-  { href: '/how-it-works', label: 'How It Works' },
-  { href: '/pricing',      label: 'Pricing'      },
-  { href: '/apply',        label: 'Apply Now'    },
-  { href: '/book',         label: 'Book a Call'  },
-]
-
 const NAV_LINKS = [
   { href: '#solutions',    label: 'Solutions',     dropdown: false },
   { href: '/how-it-works', label: 'How It Works',  dropdown: false },
@@ -84,74 +77,28 @@ const NAV_LINKS = [
 
 const E = [0.22, 1, 0.36, 1] as const
 
-/* ─── Mega menu ─────────────────────────────────────────────── */
-function MegaMenu({ onClose }: { onClose: () => void }) {
+/* ─── Solutions dropdown ────────────────────────────────────── */
+function SolutionsDropdown({ onClose }: { onClose: () => void }) {
   return (
     <motion.div
-      key="mega-menu"
+      key="solutions-dropdown"
       initial={{ opacity: 0, y: -6, scale: 0.98 }}
       animate={{ opacity: 1, y: 0,  scale: 1    }}
       exit={{    opacity: 0, y: -6, scale: 0.98 }}
       transition={{ duration: 0.20, ease: E }}
-      className="absolute top-full left-1/2 z-50 mt-3 w-[560px] -translate-x-1/2 overflow-hidden rounded-2xl"
-      style={{
-        background:           'rgba(8,8,8,0.97)',
-        border:               '1px solid rgba(255,255,255,0.10)',
-        backdropFilter:       'blur(32px)',
-        WebkitBackdropFilter: 'blur(32px)',
-        boxShadow:            '0 24px 64px rgba(0,0,0,0.60)',
-      }}
+      className="absolute left-1/2 top-full z-50 mt-2 w-64 -translate-x-1/2 rounded-2xl border border-white/10 bg-[#0a0a0a] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.8)]"
     >
-      <div className="grid grid-cols-[1fr_160px]">
-        {/* Left — services */}
-        <div className="p-4">
-          <p className="mb-2 px-3 font-inter text-[10px] font-semibold uppercase tracking-widest text-white/25">
-            Our Services
-          </p>
-          {SERVICES.map((s) => (
-            <a
-              key={s.href}
-              href={s.href}
-              onClick={onClose}
-              className="group flex items-start gap-3 rounded-xl px-3 py-2.5 transition-all duration-150 hover:bg-white/[0.04]"
-              style={{ borderLeft: '2px solid transparent' }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderLeftColor = '#00E5FF' }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderLeftColor = 'transparent' }}
-            >
-              <span className="mt-0.5 shrink-0 text-white/35 group-hover:text-[#00E5FF] transition-colors">
-                {s.icon}
-              </span>
-              <div>
-                <div className="font-inter text-xs font-semibold text-white/80 group-hover:text-white transition-colors">
-                  {s.name}
-                </div>
-                <div className="font-inter text-[11px] text-white/30">{s.desc}</div>
-              </div>
-            </a>
-          ))}
-        </div>
-
-        {/* Right — quick links */}
-        <div
-          className="flex flex-col p-4"
-          style={{ borderLeft: '1px solid rgba(255,255,255,0.07)' }}
+      {SERVICES.map((s) => (
+        <a
+          key={s.href}
+          href={s.href}
+          onClick={onClose}
+          className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 font-inter text-sm text-white/60 transition-all hover:bg-white/5 hover:text-white"
         >
-          <p className="mb-2 font-inter text-[10px] font-semibold uppercase tracking-widest text-white/25">
-            Quick Links
-          </p>
-          {QUICK_LINKS.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              onClick={onClose}
-              className="group flex items-center justify-between rounded-lg px-3 py-2 font-inter text-xs text-white/50 transition-colors hover:bg-white/[0.04] hover:text-white"
-            >
-              {l.label}
-              <ArrowRight className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
-            </a>
-          ))}
-        </div>
-      </div>
+          <span className="text-white/35">{s.icon}</span>
+          {s.name}
+        </a>
+      ))}
     </motion.div>
   )
 }
@@ -209,20 +156,28 @@ export function Navigation() {
             {/* Desktop links */}
             <div className="hidden items-center md:flex">
               {/* Solutions — dropdown trigger */}
-              <button
-                type="button"
-                className="nav-link flex items-center gap-1 whitespace-nowrap px-3 font-inter text-[13px] text-white/45 transition-colors duration-200 hover:text-white"
+              <div
+                className="relative"
                 onMouseEnter={openSolutions}
                 onMouseLeave={closeSolutions}
-                onClick={() => setSolutionsOpen((v) => !v)}
-                aria-expanded={solutionsOpen}
               >
-                Solutions
-                <ChevronDown
-                  className="h-3 w-3 transition-transform duration-200"
-                  style={{ transform: solutionsOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
-                />
-              </button>
+                <button
+                  type="button"
+                  className="nav-link flex items-center gap-1 whitespace-nowrap px-3 font-inter text-[13px] text-white/45 transition-colors duration-200 hover:text-white"
+                  onClick={() => setSolutionsOpen((v) => !v)}
+                  aria-expanded={solutionsOpen}
+                >
+                  Solutions
+                  <ChevronDown
+                    className="h-3 w-3 transition-transform duration-200"
+                    style={{ transform: solutionsOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                  />
+                </button>
+
+                <AnimatePresence>
+                  {solutionsOpen && <SolutionsDropdown onClose={() => setSolutionsOpen(false)} />}
+                </AnimatePresence>
+              </div>
 
               {NAV_LINKS.map((link) => (
                 <a
@@ -253,16 +208,6 @@ export function Navigation() {
               <Menu className="h-4 w-4" />
             </button>
           </div>
-
-          {/* Mega menu dropdown — hover zone covers both trigger and panel */}
-          <div
-            onMouseEnter={openSolutions}
-            onMouseLeave={closeSolutions}
-          >
-            <AnimatePresence>
-              {solutionsOpen && <MegaMenu onClose={() => setSolutionsOpen(false)} />}
-            </AnimatePresence>
-          </div>
         </div>
       </motion.nav>
 
@@ -275,7 +220,7 @@ export function Navigation() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25, ease: E }}
-            className="fixed inset-0 z-[60] flex flex-col px-8 py-8 backdrop-blur-2xl"
+            className="fixed inset-0 z-[60] flex max-h-screen flex-col overflow-y-auto px-8 py-8 backdrop-blur-2xl"
             style={{ background: 'rgba(0,0,0,0.96)' }}
           >
             {/* Top row */}
@@ -318,23 +263,18 @@ export function Navigation() {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25, ease: E }}
+                    transition={{ duration: 0.3, ease: E }}
                     className="overflow-hidden"
                   >
-                    <div className="ml-4 flex flex-col gap-1 py-1">
+                    <div className="flex flex-col">
                       {SERVICES.map((s) => (
                         <a
                           key={s.href}
                           href={s.href}
                           onClick={closeMobile}
-                          className="flex items-center gap-3 rounded-xl px-4 py-3 text-white/50 transition-colors hover:bg-white/[0.04] hover:text-white"
-                          style={{ borderLeft: '2px solid rgba(0,229,255,0.30)' }}
+                          className="pl-6 py-2 font-inter text-base text-white/50 transition-colors hover:text-white"
                         >
-                          <span className="text-white/35">{s.icon}</span>
-                          <div>
-                            <div className="font-syne text-base font-semibold">{s.name}</div>
-                            <div className="font-inter text-xs text-white/30">{s.desc}</div>
-                          </div>
+                          {s.name}
                         </a>
                       ))}
                     </div>
