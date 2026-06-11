@@ -142,30 +142,28 @@ function BeamsScene() {
 // ─── Export ───────────────────────────────────────────────────────────────────
 
 export default function BeamsBackground() {
+  const containerRef = useRef<HTMLDivElement>(null)
+
   return (
-    // This div is fixed + full viewport. It is NOT inside overflow-hidden.
-    // The canvas MUST be positioned absolute inside a relative/fixed parent
-    // with explicit pixel dimensions — never rely on % inside overflow:hidden.
-    <div style={{
-      position: 'fixed',
-      top: 0, left: 0,
-      width: '100vw',
-      height: '100vh',
-      pointerEvents: 'none',
-      zIndex: 0,
-    }}>
+    <div
+      ref={containerRef}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        pointerEvents: 'none',
+        zIndex: 0,
+      }}
+    >
       <Canvas
         dpr={[1, 1.5]}
         frameloop="always"
         gl={{ antialias: false, powerPreference: 'high-performance', alpha: true }}
         camera={false as any}
-        style={{
-          position: 'absolute',
-          top: 0, left: 0,
-          width: '100%',
-          height: '100%',
-          display: 'block',
-        }}
+        resize={{ scroll: false, debounce: { scroll: 50, resize: 0 } }}
+        style={{ width: '100%', height: '100%', display: 'block' }}
       >
         <BeamsScene />
       </Canvas>
