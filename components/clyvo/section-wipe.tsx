@@ -1,9 +1,2 @@
-export function SectionWipe({ from, to }: { from: string; to: string }) {
-  return (
-    <div
-      aria-hidden
-      className="pointer-events-none relative z-0 w-full"
-      style={{ height: 40, background: `linear-gradient(180deg, ${from} 0%, ${to} 100%)` }}
-    />
-  )
-}
+// Section wipes not needed in the luxury design — sections use background colors directly
+export function SectionWipe({ from, to }: { from: string; to: string }) { return null }

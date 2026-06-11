@@ -5,304 +5,179 @@ import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { Menu, X, ChevronDown, MessageSquare, GitBranch, Cpu, Phone, Link2 } from 'lucide-react'
 
-/* ─── Logo filter chain ─────────────────────────────────────── */
-const LOGO_FILTER = [
-  'invert(0)',
-  'sepia(1)',
-  'saturate(5)',
-  'hue-rotate(155deg)',
-  'drop-shadow(0 0 5px rgba(0,229,255,0.95))',
-  'drop-shadow(0 0 14px rgba(0,229,255,0.60))',
-  'drop-shadow(0 0 28px rgba(0,229,255,0.25))',
-].join(' ')
+const LOGO_FILTER = 'brightness(0) saturate(100%)'
 
-function LogoBadge({ size = 32 }: { size?: number }) {
+function LogoBadge({ size = 28 }: { size?: number }) {
   return (
-    <Image
-      src="/logo.png"
-      alt="Clyvo AI"
-      width={size}
-      height={size}
-      style={{
-        objectFit:    'contain',
-        flexShrink:   0,
-        filter:       LOGO_FILTER,
-        mixBlendMode: 'normal',
-        animation:    'logo-float-3d 5s ease-in-out infinite',
-      }}
-    />
+    <Image src="/logo.png" alt="Clyvo AI" width={size} height={size}
+      style={{ objectFit: 'contain', flexShrink: 0, filter: LOGO_FILTER }} />
   )
 }
 
-/* ─── Data ──────────────────────────────────────────────────── */
 const SERVICES = [
-  {
-    href:  '/services/ai-chatbots',
-    icon:  <MessageSquare className="h-4 w-4" />,
-    name:  'AI Chatbots & Assistants',
-    desc:  'Conversations that convert 24/7',
-  },
-  {
-    href:  '/services/workflow-automation',
-    icon:  <GitBranch className="h-4 w-4" />,
-    name:  'Workflow Automation',
-    desc:  'Eliminate repetitive manual work',
-  },
-  {
-    href:  '/services/custom-ai-models',
-    icon:  <Cpu className="h-4 w-4" />,
-    name:  'Custom AI Models',
-    desc:  'AI trained on your own data',
-  },
-  {
-    href:  '/services/voice-agents',
-    icon:  <Phone className="h-4 w-4" />,
-    name:  'AI Voice Agents',
-    desc:  'Handle calls like your best rep',
-  },
-  {
-    href:  '/services/system-integrations',
-    icon:  <Link2 className="h-4 w-4" />,
-    name:  'System Integrations',
-    desc:  'Connect AI to your full stack',
-  },
+  { href: '/services/ai-chatbots',          icon: <MessageSquare className="h-4 w-4" />, name: 'AI Chatbots & Assistants',    desc: 'Conversations that convert 24/7' },
+  { href: '/services/workflow-automation',  icon: <GitBranch className="h-4 w-4" />,     name: 'Workflow Automation',          desc: 'Eliminate repetitive manual work' },
+  { href: '/services/custom-ai-models',     icon: <Cpu className="h-4 w-4" />,           name: 'Custom AI Models',             desc: 'AI trained on your own data' },
+  { href: '/services/voice-agents',         icon: <Phone className="h-4 w-4" />,         name: 'AI Voice Agents',              desc: 'Intelligent inbound/outbound calls' },
+  { href: '/services/system-integrations',  icon: <Link2 className="h-4 w-4" />,         name: 'System Integrations',          desc: 'Connect AI to your existing stack' },
 ]
 
 const NAV_LINKS = [
-  { href: '#solutions',    label: 'Solutions',     dropdown: false },
-  { href: '/how-it-works', label: 'How It Works',  dropdown: false },
-  { href: '/pricing',      label: 'Pricing',       dropdown: false },
-  { href: '#about',        label: 'About',         dropdown: false },
+  { href: '#solutions',   label: 'Solutions' },
+  { href: '#how-it-works',label: 'How It Works' },
+  { href: '#pricing',     label: 'Pricing' },
+  { href: '#about',       label: 'About' },
 ]
 
-const E = [0.22, 1, 0.36, 1] as const
-
-/* ─── Solutions dropdown ────────────────────────────────────── */
-function SolutionsDropdown({ onClose }: { onClose: () => void }) {
-  return (
-    <motion.div
-      key="solutions-dropdown"
-      initial={{ opacity: 0, y: -6, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0,  scale: 1    }}
-      exit={{    opacity: 0, y: -6, scale: 0.98 }}
-      transition={{ duration: 0.20, ease: E }}
-      className="absolute left-1/2 top-full z-50 mt-2 w-64 -translate-x-1/2 rounded-2xl border border-black/8 bg-white p-4 shadow-[0_8px_40px_rgba(0,0,0,0.12)]"
-    >
-      {SERVICES.map((s) => (
-        <a
-          key={s.href}
-          href={s.href}
-          onClick={onClose}
-          className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 font-inter text-sm text-black/50 transition-all hover:bg-black/5 hover:text-black"
-        >
-          <span className="text-black/30">{s.icon}</span>
-          {s.name}
-        </a>
-      ))}
-    </motion.div>
-  )
-}
-
-/* ─── Main component ────────────────────────────────────────── */
 export function Navigation() {
-  const [mobileOpen,     setMobileOpen]     = useState(false)
-  const [solutionsOpen,  setSolutionsOpen]  = useState(false)
-  const [mobileExpanded, setMobileExpanded] = useState(false)
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [scrolled, setScrolled]     = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [dropOpen, setDropOpen]     = useState(false)
+  const dropRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
-  }, [mobileOpen])
+    const onScroll = () => setScrolled(window.scrollY > 40)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
-  function openSolutions()  {
-    if (closeTimer.current) clearTimeout(closeTimer.current)
-    setSolutionsOpen(true)
-  }
-  function closeSolutions() {
-    closeTimer.current = setTimeout(() => setSolutionsOpen(false), 120)
-  }
-  function closeMobile()    { setMobileOpen(false); setMobileExpanded(false) }
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (dropRef.current && !dropRef.current.contains(e.target as Node)) setDropOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
 
   return (
     <>
-      {/* Floating pill nav */}
-      <motion.nav
-        initial={{ y: -20, opacity: 0, x: '-50%' }}
-        animate={{ y: 0,   opacity: 1, x: '-50%' }}
-        transition={{ duration: 0.8, delay: 0.1, ease: E }}
-        className="fixed top-5 left-1/2 z-50"
+      <header
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
+        style={{
+          background: scrolled ? 'rgba(245,240,232,0.92)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(20px)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(201,168,76,0.15)' : '1px solid transparent',
+        }}
       >
-        {/* Relative wrapper so MegaMenu can use absolute positioning */}
-        <div className="relative">
-          <div
-            className="flex items-center gap-1 rounded-full border px-4 py-2"
-            style={{
-              background:           'rgba(255,255,255,0.04)',
-              borderColor:          'rgba(255,255,255,0.10)',
-              backdropFilter:       'blur(28px)',
-              WebkitBackdropFilter: 'blur(28px)',
-              boxShadow:            '0 4px 32px rgba(0,0,0,0.40)',
-            }}
-          >
-            {/* Logo */}
-            <a href="/" className="mr-2 flex items-center gap-2">
-              <LogoBadge size={36} />
-              <span className="hidden font-syne text-sm font-semibold text-black sm:block whitespace-nowrap">
-                Clyvo <span style={{ color: '#00E5FF' }}>AI</span>
-              </span>
-            </a>
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 md:px-10">
+          {/* Logo */}
+          <a href="/" className="flex items-center gap-3 group">
+            <LogoBadge size={26} />
+            <span className="font-syne text-sm font-semibold tracking-[0.08em] text-[#1A1A1A] uppercase">
+              Clyvo <span style={{ color: '#C9A84C' }}>AI</span>
+            </span>
+          </a>
 
-            {/* Desktop links */}
-            <div className="hidden items-center md:flex">
-              {/* Solutions — dropdown trigger */}
-              <div
-                className="relative"
-                onMouseEnter={openSolutions}
-                onMouseLeave={closeSolutions}
-              >
-                <button
-                  type="button"
-                  className="nav-link flex items-center gap-1 whitespace-nowrap px-3 font-inter text-[13px] text-black/50 transition-colors duration-200 hover:text-black"
-                  onClick={() => setSolutionsOpen((v) => !v)}
-                  aria-expanded={solutionsOpen}
-                >
-                  Solutions
-                  <ChevronDown
-                    className="h-3 w-3 transition-transform duration-200"
-                    style={{ transform: solutionsOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
-                  />
-                </button>
-
-                <AnimatePresence>
-                  {solutionsOpen && <SolutionsDropdown onClose={() => setSolutionsOpen(false)} />}
-                </AnimatePresence>
-              </div>
-
-              {NAV_LINKS.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="nav-link whitespace-nowrap px-3 font-inter text-[13px] text-black/50 transition-colors duration-200 hover:text-black"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </div>
-
-            {/* Desktop CTA */}
-            <a
-              href="/book"
-              className="ml-2 hidden whitespace-nowrap rounded-full border border-black/20 bg-black px-5 py-2 font-inter text-[13px] font-medium text-white transition-all duration-200 hover:bg-black/80 hover:scale-[1.02] md:block"
-            >
-              Book a Discovery Call
-            </a>
-
-            {/* Mobile hamburger — 44px touch target */}
-            <button
-              type="button"
-              onClick={() => setMobileOpen(true)}
-              className="ml-1 flex h-11 w-11 items-center justify-center rounded-full text-black/50 hover:text-black md:hidden"
-              aria-label="Open menu"
-            >
-              <Menu className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-      </motion.nav>
-
-      {/* Full-screen mobile overlay */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            key="mobile-nav"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25, ease: E }}
-            className="fixed inset-0 z-[60] flex max-h-screen flex-col overflow-y-auto px-8 py-8 bg-[#f8f8f6] backdrop-blur-2xl"
-            style={{ background: 'rgba(0,0,0,0.96)' }}
-          >
-            {/* Top row */}
-            <div className="flex items-center justify-between">
-              <a href="/" className="flex items-center gap-2.5" onClick={closeMobile}>
-                <LogoBadge size={40} />
-                <span className="font-syne text-lg font-bold text-black">
-                  Clyvo <span style={{ color: '#00E5FF' }}>AI</span>
-                </span>
-              </a>
+          {/* Desktop nav */}
+          <nav className="hidden items-center gap-1 md:flex">
+            {/* Solutions dropdown */}
+            <div ref={dropRef} className="relative">
               <button
-                type="button"
-                onClick={closeMobile}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-black/10 text-black/50 hover:text-black"
-                aria-label="Close menu"
+                onClick={() => setDropOpen(!dropOpen)}
+                className="flex items-center gap-1 px-4 py-2 font-inter text-[12px] font-medium uppercase tracking-[0.10em] text-[#1A1A1A]/60 transition-colors hover:text-[#1A1A1A]"
               >
-                <X className="h-4 w-4" />
+                Solutions <ChevronDown className={`h-3 w-3 transition-transform ${dropOpen ? 'rotate-180' : ''}`} />
               </button>
-            </div>
-
-            {/* Links */}
-            <nav className="mt-10 flex flex-col gap-1 overflow-y-auto">
-              {/* Solutions accordion */}
-              <button
-                type="button"
-                onClick={() => setMobileExpanded((v) => !v)}
-                className="flex items-center justify-between rounded-xl px-5 py-4 font-syne text-2xl font-bold text-black/60 transition-colors hover:bg-black/[0.04] hover:text-black"
-              >
-                Solutions
-                <ChevronDown
-                  className="h-5 w-5 transition-transform duration-200"
-                  style={{ transform: mobileExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }}
-                />
-              </button>
-
               <AnimatePresence>
-                {mobileExpanded && (
+                {dropOpen && (
                   <motion.div
-                    key="mobile-solutions"
-                    initial={{ maxHeight: 0, opacity: 0 }}
-                    animate={{ maxHeight: 300, opacity: 1 }}
-                    exit={{ maxHeight: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: 'easeInOut' }}
-                    style={{ overflow: 'hidden' }}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 8 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute left-1/2 top-full mt-3 w-72 -translate-x-1/2"
+                    style={{
+                      background: 'rgba(245,240,232,0.98)',
+                      border: '1px solid rgba(201,168,76,0.2)',
+                      boxShadow: '0 20px 60px rgba(26,26,26,0.12)',
+                    }}
                   >
-                    <div className="flex flex-col">
-                      {SERVICES.map((s) => (
-                        <a
-                          key={s.href}
-                          href={s.href}
-                          onClick={closeMobile}
-                          className="block w-full pl-8 py-3 font-inter text-sm text-black/50 transition-colors hover:text-black"
-                        >
-                          {s.name}
-                        </a>
-                      ))}
-                    </div>
+                    {SERVICES.map((s) => (
+                      <a key={s.href} href={s.href}
+                        className="flex items-start gap-3 px-5 py-4 transition-colors hover:bg-[rgba(201,168,76,0.06)]"
+                        onClick={() => setDropOpen(false)}
+                      >
+                        <span className="mt-0.5 text-[#C9A84C]/70">{s.icon}</span>
+                        <div>
+                          <p className="font-inter text-[12px] font-medium text-[#1A1A1A]">{s.name}</p>
+                          <p className="font-inter text-[11px] text-[#1A1A1A]/45">{s.desc}</p>
+                        </div>
+                      </a>
+                    ))}
                   </motion.div>
                 )}
               </AnimatePresence>
+            </div>
 
-              {NAV_LINKS.map((link, i) => (
-                <motion.a
-                  key={link.href}
-                  href={link.href}
-                  onClick={closeMobile}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.05 * i, duration: 0.4, ease: E }}
-                  className="rounded-xl px-5 py-4 font-syne text-2xl font-bold text-black/60 transition-colors hover:bg-black/[0.04] hover:text-black"
+            {NAV_LINKS.map((l) => (
+              <a key={l.href} href={l.href}
+                className="px-4 py-2 font-inter text-[12px] font-medium uppercase tracking-[0.10em] text-[#1A1A1A]/60 transition-colors hover:text-[#1A1A1A]"
+              >
+                {l.label}
+              </a>
+            ))}
+          </nav>
+
+          {/* CTA + mobile toggle */}
+          <div className="flex items-center gap-3">
+            <a href="#contact" className="btn-primary hidden md:inline-flex">
+              Book a Discovery Call
+            </a>
+            <button
+              className="flex h-10 w-10 items-center justify-center text-[#1A1A1A]/60 hover:text-[#1A1A1A] md:hidden"
+              onClick={() => setMobileOpen(true)}
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] flex flex-col overflow-y-auto px-8 py-8"
+            style={{ background: '#F5F0E8' }}
+          >
+            <div className="flex items-center justify-between">
+              <a href="/" className="flex items-center gap-3">
+                <LogoBadge size={24} />
+                <span className="font-syne text-sm font-semibold uppercase tracking-[0.08em]">
+                  Clyvo <span style={{ color: '#C9A84C' }}>AI</span>
+                </span>
+              </a>
+              <button className="flex h-10 w-10 items-center justify-center text-[#1A1A1A]/50" onClick={() => setMobileOpen(false)}>
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <nav className="mt-12 flex flex-col gap-1">
+              <p className="eyebrow mb-4">Navigation</p>
+              {SERVICES.map((s) => (
+                <a key={s.href} href={s.href}
+                  className="py-3 font-syne text-xl font-semibold text-[#1A1A1A]/70 hover:text-[#1A1A1A] transition-colors"
+                  onClick={() => setMobileOpen(false)}
                 >
-                  {link.label}
-                </motion.a>
+                  {s.name}
+                </a>
+              ))}
+              <div className="my-4 gold-rule" />
+              {NAV_LINKS.map((l) => (
+                <a key={l.href} href={l.href}
+                  className="py-3 font-syne text-xl font-semibold text-[#1A1A1A]/70 hover:text-[#1A1A1A] transition-colors"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {l.label}
+                </a>
               ))}
             </nav>
 
-            <div className="mt-auto">
-              <a
-                href="/book"
-                onClick={closeMobile}
-                className="block rounded-full bg-white py-4 text-center font-inter text-base font-medium text-black"
-              >
+            <div className="mt-auto pt-8">
+              <a href="#contact" className="btn-primary w-full justify-center" onClick={() => setMobileOpen(false)}>
                 Book a Discovery Call
               </a>
             </div>

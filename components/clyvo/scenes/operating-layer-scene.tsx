@@ -2,8 +2,9 @@
 
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, type MotionValue } from 'motion/react'
-import { EASE_CINEMATIC } from '@/lib/utils'
 import { Check } from 'lucide-react'
+
+const EASE = [0.16, 1, 0.3, 1] as const
 
 const STEPS = [
   { num: '01', title: 'Discovery Call',           description: 'A free 45-minute call to understand your business, pain points, systems, and goals. No hard sell.' },
@@ -14,57 +15,29 @@ const STEPS = [
   { num: '06', title: 'Retainer & Optimisation',  description: 'Ongoing monitoring, model updates, retraining, and new feature development as your business evolves.' },
 ]
 
-function StepItem({
-  progress,
-  step,
-  index,
-  total,
-}: {
-  progress: MotionValue<number>
-  step: typeof STEPS[0]
-  index: number
-  total: number
-}) {
-  const sliceStart = 0.08 + (index / total) * 0.78
-  const sliceEnd   = sliceStart + 0.10
-
-  const numOpacity = useTransform(
-    progress,
-    [Math.max(0, sliceStart - 0.03), sliceEnd, Math.min(1, sliceEnd + 0.28)],
-    [0.15, 0.90, 0.40]
-  )
-  const contentOpacity = useTransform(progress, [sliceStart, sliceEnd], [0, 1])
-  const dotScale = useTransform(
-    progress,
-    [Math.max(0, sliceStart - 0.02), sliceEnd, Math.min(1, sliceEnd + 0.15)],
-    [0.6, 1.4, 1.0]
-  )
-  const completedOpacity = useTransform(progress, (v) => (v > sliceEnd + 0.05 ? 1 : 0))
+function StepItem({ progress, step, index, total }: { progress: MotionValue<number>; step: typeof STEPS[0]; index: number; total: number }) {
+  const s = 0.08 + (index / total) * 0.78
+  const e = s + 0.10
+  const numOp  = useTransform(progress, [Math.max(0, s - 0.03), e, Math.min(1, e + 0.28)], [0.2, 1, 0.5])
+  const contOp = useTransform(progress, [s, e], [0, 1])
+  const dotSc  = useTransform(progress, [Math.max(0, s - 0.02), e, Math.min(1, e + 0.15)], [0.6, 1.4, 1.0])
+  const doneOp = useTransform(progress, (v) => (v > e + 0.05 ? 1 : 0))
 
   return (
-    <div className="relative grid items-start gap-4 border-t border-white/[0.06] py-8 first:border-0 first:pt-0 sm:gap-6 sm:py-10 sm:grid-cols-[80px_1fr]">
-      {/* Connector dot on left rail — desktop only */}
-      <motion.div
-        className="absolute -left-[1.375rem] top-10 hidden h-2.5 w-2.5 rounded-full sm:block"
-        style={{ scale: dotScale, background: '#0066cc' }}
-      />
-
-      {/* Step number */}
-      <motion.div className="relative flex items-center gap-2" style={{ opacity: numOpacity }}>
-        <span className="font-syne text-3xl font-bold leading-none tracking-tight text-black sm:text-4xl">
-          {step.num}
-        </span>
-        <motion.div style={{ opacity: completedOpacity }}>
-          <Check className="h-4 w-4 text-black/55" />
+    <div className="relative grid items-start gap-4 py-8 first:pt-0 sm:gap-8 sm:py-10 sm:grid-cols-[80px_1fr]"
+      style={{ borderTop: '1px solid rgba(201,168,76,0.15)' }}>
+      <style>{`div:first-child { border-top: none; }`}</style>
+      <motion.div className="absolute -left-[1.375rem] top-10 hidden h-2.5 w-2.5 rounded-full sm:block"
+        style={{ scale: dotSc, background: '#C9A84C' }} />
+      <motion.div className="flex items-center gap-2" style={{ opacity: numOp }}>
+        <span className="font-playfair text-3xl font-bold italic text-[#1A1A1A]">{step.num}</span>
+        <motion.div style={{ opacity: doneOp }}>
+          <Check className="h-4 w-4 text-[#C9A84C]" />
         </motion.div>
       </motion.div>
-
-      {/* Content — no x translate (prevents mobile overflow) */}
-      <motion.div style={{ opacity: contentOpacity }}>
-        <h3 className="font-syne text-lg font-semibold text-black sm:text-xl">{step.title}</h3>
-        <p className="mt-2 font-inter text-sm font-light leading-[1.75] text-black/50 md:text-base">
-          {step.description}
-        </p>
+      <motion.div style={{ opacity: contOp }}>
+        <h3 className="font-syne text-lg font-semibold text-[#1A1A1A]">{step.title}</h3>
+        <p className="mt-2 font-inter text-sm font-light leading-[1.8] text-[#4A4A4A]">{step.description}</p>
       </motion.div>
     </div>
   )
@@ -72,66 +45,35 @@ function StepItem({
 
 export function OperatingLayerScene() {
   const sectionRef = useRef<HTMLElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start'],
-  })
-
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] })
   const lineScaleY = useTransform(scrollYProgress, [0.05, 0.90], [0, 1])
 
   return (
-    <section ref={sectionRef} id="how-it-works-scene" className="relative w-full overflow-hidden px-4 py-14 sm:px-6 md:px-8 md:py-32">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.07] to-transparent" />
-
-      <div className="relative mx-auto max-w-6xl">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.6, ease: EASE_CINEMATIC }}
-          className="mb-12 md:mb-16"
-        >
-          <span className="font-inter font-medium text-[11px] uppercase tracking-[0.18em] text-black/40">
-            How It Works
-          </span>
-          <h2 className="mt-4 text-balance font-syne text-2xl font-bold tracking-[-0.03em] text-black sm:text-3xl md:text-5xl" style={{ fontFeatureSettings: "'ss01'" }}>
+    <section ref={sectionRef} id="how-it-works" className="relative section-padding" style={{ background: '#F5F0E8' }}>
+      <div className="gold-rule absolute inset-x-0 top-0" />
+      <div className="mx-auto max-w-5xl">
+        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }} transition={{ duration: 0.9, ease: EASE }}
+          className="mb-16">
+          <div className="section-divider" />
+          <span className="eyebrow">How It Works</span>
+          <h2 className="mt-6 headline-luxury" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 3rem)' }}>
             A process built for results, not risk.
           </h2>
-          <p className="mt-4 max-w-xl font-inter text-sm font-light leading-[1.75] text-black/50 md:text-base">
+          <p className="mt-4 max-w-lg font-inter text-sm font-light leading-[1.8] text-[#4A4A4A]">
             Six clear stages, full transparency throughout — from the first call to live and beyond.
           </p>
         </motion.div>
 
-        {/* Timeline layout */}
-        <div className="flex gap-10 sm:gap-16">
-          {/* Vertical progress line — hidden on mobile */}
+        <div className="flex gap-12 sm:gap-16">
           <div className="relative hidden shrink-0 flex-col items-center sm:flex" style={{ width: 2 }}>
-            <div
-              className="absolute inset-0 rounded-full"
-              style={{ background: 'rgba(255,255,255,0.08)' }}
-            />
-            <motion.div
-              className="absolute top-0 w-full rounded-full will-change-transform"
-              style={{
-                scaleY: lineScaleY,
-                transformOrigin: 'top',
-                height: '100%',
-                background: '#0066cc',
-              }}
-            />
+            <div className="absolute inset-0 rounded-full" style={{ background: 'rgba(201,168,76,0.15)' }} />
+            <motion.div className="absolute top-0 w-full rounded-full will-change-transform"
+              style={{ scaleY: lineScaleY, transformOrigin: 'top', height: '100%', background: '#C9A84C' }} />
           </div>
-
-          {/* Steps */}
-          <div className="relative flex-1">
+          <div className="flex-1">
             {STEPS.map((step, i) => (
-              <StepItem
-                key={step.num}
-                progress={scrollYProgress}
-                step={step}
-                index={i}
-                total={STEPS.length}
-              />
+              <StepItem key={step.num} progress={scrollYProgress} step={step} index={i} total={STEPS.length} />
             ))}
           </div>
         </div>

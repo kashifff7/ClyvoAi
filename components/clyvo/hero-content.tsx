@@ -5,318 +5,190 @@ import Image from 'next/image'
 import { motion, useScroll, useTransform } from 'motion/react'
 import { ArrowRight } from 'lucide-react'
 
-const E = [0.22, 1, 0.36, 1] as const
+const EASE = [0.16, 1, 0.3, 1] as const
 
-const LOGO_FILTER = [
-  'hue-rotate(200deg)',
-  'saturate(1.5)',
-  'brightness(0.4)',
-].join(' ')
+const LOGO_FILTER = 'brightness(0) saturate(100%)'
 
-// Deterministic white particles — fewer on mobile
-const PARTICLES = Array.from({ length: 30 }, (_, i) => {
+const PARTICLES = Array.from({ length: 20 }, (_, i) => {
   const seed = (i * 9301 + 49297) % 233280
   const rand = seed / 233280
   return {
-    left:     `${(i * 41) % 100}%`,
-    bottom:   `${(rand * 80).toFixed(2)}%`,
-    size:     1 + (i % 3) * 0.4,
-    duration: `${10 + (i % 7) * 1.8}s`,
-    delay:    `${(i % 9) * -1.3}s`,
-    opacity:  0.10 + (i % 4) * 0.05,
+    left: `${(i * 41) % 100}%`, bottom: `${(rand * 80).toFixed(2)}%`,
+    size: 1 + (i % 3) * 0.3, duration: `${12 + (i % 6) * 2}s`,
+    delay: `${(i % 9) * -1.5}s`, opacity: 0.04 + (i % 4) * 0.02,
   }
 })
 
-const WORDS = [
-  { text: 'Custom', line: 0 },
-  { text: 'AI.',    line: 0 },
-  { text: 'Real',     line: 1 },
-  { text: 'Results.', line: 1 },
-]
-
 export function HeroContent() {
-  const ref = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start start', 'end start'],
-  })
+  const ref = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
 
-  const headlineScale   = useTransform(scrollYProgress, [0, 0.90], [1, 0.7])
-  const headlineOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0])
-  const subtextOpacity  = useTransform(scrollYProgress, [0, 0.70], [1, 0])
-  const orbScale        = useTransform(scrollYProgress, [0, 0.90], [1, 2])
-  const heroContentY    = useTransform(scrollYProgress, [0, 0.90], [0, -80])
-  const logoY           = useTransform(scrollYProgress, [0, 0.85], [0, -40])
-  const logoOpacity     = useTransform(scrollYProgress, [0, 0.80], [1, 0])
-  const cardX           = useTransform(scrollYProgress, [0, 0.85], [0, 150])
-  const cardOpacity     = useTransform(scrollYProgress, [0, 0.80], [1, 0])
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
+  const contentY       = useTransform(scrollYProgress, [0, 0.7], [0, -60])
+  const cardOpacity    = useTransform(scrollYProgress, [0, 0.5], [1, 0])
+  const cardX          = useTransform(scrollYProgress, [0, 0.5], [0, 80])
+  const logoOpacity    = useTransform(scrollYProgress, [0, 0.5], [1, 0])
+  const logoY          = useTransform(scrollYProgress, [0, 0.5], [0, -30])
 
   return (
-    <div ref={ref} className="relative h-[150vh] bg-transparent">
-    <div className="sticky top-0 h-screen overflow-hidden bg-transparent">
-      {/* Ocean/graphite ambient gradients */}
-      <motion.div
-        style={{ scale: orbScale }}
-        className="pointer-events-none absolute inset-0 will-change-transform"
-      >
-        <div
-          className="absolute inset-0"
-          style={{ background: 'radial-gradient(ellipse 70% 50% at 65% 55%, rgba(248,248,246,0.9) 0%, transparent 70%)' }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{ background: 'radial-gradient(ellipse 100% 60% at 50% 100%, rgba(0,102,204,0.03) 0%, transparent 50%)' }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{ background: 'radial-gradient(ellipse 40% 30% at 75% 30%, rgba(0,102,204,0.05) 0%, transparent 60%)' }}
-        />
-      </motion.div>
+    <section ref={ref} className="relative w-full overflow-hidden" style={{ height: '100vh', background: '#F5F0E8' }}>
+      {/* Subtle grid */}
+      <div className="hero-grid pointer-events-none absolute inset-0 opacity-60" />
 
-      {/* SVG noise */}
-      <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.03]" aria-hidden>
-        <filter id="noise">
-          <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-          <feColorMatrix type="saturate" values="0" />
-        </filter>
-        <rect width="100%" height="100%" filter="url(#noise)" />
-      </svg>
+      {/* Warm radial glow */}
+      <div className="pointer-events-none absolute inset-0" style={{
+        background: 'radial-gradient(ellipse 80% 60% at 60% 40%, rgba(201,168,76,0.08) 0%, transparent 70%)',
+      }} />
 
-      {/* 60px grid */}
-      <div className="hero-grid pointer-events-none absolute inset-0" />
+      {/* Edge vignette */}
+      <div className="pointer-events-none absolute inset-0" style={{
+        background: 'radial-gradient(ellipse at center, transparent 50%, rgba(245,240,232,0.7) 100%)',
+      }} />
 
-      {/* Vignette */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{ background: 'radial-gradient(ellipse at center, transparent 40%, rgba(248,248,246,0.6) 100%)' }}
-      />
-
-      {/* White particles — hidden on mobile for performance */}
-      <div className="pointer-events-none absolute inset-0 hidden overflow-hidden sm:block">
+      {/* Fine particles — desktop only */}
+      <div className="pointer-events-none absolute inset-0 hidden overflow-hidden md:block">
         {PARTICLES.map((p, i) => (
-          <span
-            key={i}
-            className="absolute rounded-full bg-black"
-            style={{
-              left: p.left, bottom: p.bottom,
-              width: p.size, height: p.size,
-              opacity: p.opacity,
-              animation: `particle-rise ${p.duration} ${p.delay} linear infinite`,
-            }}
-          />
+          <span key={i} className="absolute rounded-full" style={{
+            left: p.left, bottom: p.bottom, width: p.size, height: p.size,
+            background: '#C9A84C', opacity: p.opacity,
+            animation: `particle-rise ${p.duration} ${p.delay} linear infinite`,
+          }} />
         ))}
       </div>
 
-      {/* Logo moon — glowing Clyvo logo, desktop only */}
-      <motion.div
-        style={{ y: logoY, opacity: logoOpacity }}
-        className="pointer-events-none absolute top-20 right-[6%] hidden md:block md:right-[10%]"
+      {/* Logo orb — desktop only */}
+      <motion.div style={{ y: logoY, opacity: logoOpacity }}
+        className="pointer-events-none absolute top-24 right-[8%] hidden md:block"
       >
         <motion.div
-          animate={{ y: [0, -12, 0], rotate: [0, 5, 0, -5, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-          className="flex h-32 w-32 items-center justify-center rounded-full border md:h-44 md:w-44"
+          animate={{ y: [0, -10, 0] }}
+          transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+          className="flex h-36 w-36 items-center justify-center"
           style={{
-            background: 'radial-gradient(circle, rgba(0,102,204,0.08) 0%, rgba(0,102,204,0.03) 50%, transparent 70%)',
-            borderColor: 'rgba(0,102,204,0.2)',
-            boxShadow: '0 0 60px rgba(0,102,204,0.15), 0 0 120px rgba(0,102,204,0.08), 0 0 200px rgba(0,102,204,0.04)',
+            background: 'radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%)',
+            border: '1px solid rgba(201,168,76,0.25)',
+            borderRadius: '50%',
+            boxShadow: '0 0 60px rgba(201,168,76,0.15)',
           }}
         >
-          <Image
-            src="/logo.png"
-            alt="Clyvo AI"
-            width={64}
-            height={64}
-            className="h-16 w-16 md:h-24 md:w-24"
-            style={{
-              objectFit:    'contain',
-              filter:       LOGO_FILTER,
-              mixBlendMode: 'normal',
-            }}
-          />
+          <Image src="/logo.png" alt="Clyvo AI" width={56} height={56}
+            style={{ objectFit: 'contain', filter: LOGO_FILTER, opacity: 0.7 }} />
         </motion.div>
       </motion.div>
 
-      {/* Main content — bottom-left aligned */}
-      <motion.div
-        style={{ scale: headlineScale, opacity: headlineOpacity, y: heroContentY, transformOrigin: 'bottom left' }}
-        className="absolute bottom-0 left-5 max-w-[92vw] pb-24 pt-24 will-change-transform sm:left-8 md:left-16 md:pb-32 md:pt-0"
+      {/* Main content */}
+      <motion.div style={{ opacity: contentOpacity, y: contentY }}
+        className="absolute bottom-0 left-0 w-full pb-20 pl-6 sm:pl-10 md:pl-16 lg:pl-24 will-change-transform"
       >
-        {/* Badge */}
+        {/* Eyebrow */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: E }}
-          className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-black/[0.10] bg-black/[0.04] px-4 py-2 backdrop-blur-sm"
+          initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3, ease: EASE }}
+          className="mb-6 flex items-center gap-3"
         >
-          <motion.span
-            className="h-1.5 w-1.5 rounded-full bg-[#0066cc]"
-            animate={{ opacity: [0.4, 1, 0.4] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <span className="font-inter text-xs font-medium text-black/50 tracking-[0.15em]">
-            Custom AI Agency · B2B
-          </span>
+          <div style={{ width: 24, height: 1, background: '#C9A84C' }} />
+          <span className="eyebrow">Custom AI Agency · B2B</span>
         </motion.div>
 
-        {/* Headline — responsive from mobile to cinema */}
-        <h1
-          className="font-syne font-extrabold leading-[0.95] text-black"
-          style={{
-            fontSize: 'clamp(2.2rem, 8vw, 9rem)',
-            letterSpacing: '-0.05em',
-            textShadow: 'none',
-          }}
-        >
-          <span className="block whitespace-normal font-playfair font-bold italic md:whitespace-nowrap">
-            {WORDS.filter(w => w.line === 0).map((w, i) => (
-              <motion.span
-                key={w.text}
-                className="mr-[0.18em] inline-block last:mr-0 overflow-hidden"
-                initial={{ clipPath: 'inset(0 100% 0 0)' }}
-                animate={{ clipPath: 'inset(0 0% 0 0)' }}
-                transition={{ duration: 0.9, delay: 0.4 + i * 0.09, ease: E }}
-              >
-                {w.text}
-              </motion.span>
+        {/* Headline */}
+        <h1 style={{ fontSize: 'clamp(2.8rem, 9vw, 9.5rem)', lineHeight: 0.95, letterSpacing: '-0.03em' }}>
+          <span className="block headline-luxury overflow-hidden">
+            {['Custom', 'AI.'].map((w, i) => (
+              <motion.span key={w} className="mr-[0.15em] inline-block last:mr-0"
+                initial={{ clipPath: 'inset(0 100% 0 0)' }} animate={{ clipPath: 'inset(0 0% 0 0)' }}
+                transition={{ duration: 1.1, delay: 0.5 + i * 0.12, ease: EASE }}
+              >{w}</motion.span>
             ))}
           </span>
-          <span className="block whitespace-normal md:whitespace-nowrap text-black/15">
-            {WORDS.filter(w => w.line === 1).map((w, i) => (
-              <motion.span
-                key={w.text}
-                className="mr-[0.18em] inline-block last:mr-0 overflow-hidden"
-                initial={{ clipPath: 'inset(0 100% 0 0)' }}
-                animate={{ clipPath: 'inset(0 0% 0 0)' }}
-                transition={{ duration: 0.9, delay: 0.65 + i * 0.09, ease: E }}
-              >
-                {w.text}
-              </motion.span>
+          <span className="block font-syne font-bold tracking-[-0.04em] text-[#1A1A1A]/18 overflow-hidden"
+            style={{ fontSize: '0.92em' }}>
+            {['Real', 'Results.'].map((w, i) => (
+              <motion.span key={w} className="mr-[0.15em] inline-block last:mr-0"
+                initial={{ clipPath: 'inset(0 100% 0 0)' }} animate={{ clipPath: 'inset(0 0% 0 0)' }}
+                transition={{ duration: 1.1, delay: 0.75 + i * 0.12, ease: EASE }}
+              >{w}</motion.span>
             ))}
           </span>
         </h1>
 
-        {/* Descriptor */}
-        <motion.div style={{ opacity: subtextOpacity }}>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.95, ease: E }}
-            className="mt-5 max-w-[420px] font-inter text-base font-light leading-[1.75] text-black/50 sm:text-lg"
-          >
-            We build end-to-end AI systems for B2B businesses — from scratch,
-            for your exact operations.
-          </motion.p>
-
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 1.1, ease: E }}
-            className="mt-5 hidden font-mono text-sm tracking-widest text-black/15 sm:block"
-          >
+        {/* Subtext */}
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.1, ease: EASE }}
+          className="mt-8 max-w-md"
+        >
+          <p className="font-inter text-base font-light leading-[1.8] text-[#1A1A1A]/55">
+            We build end-to-end AI systems for B2B businesses — from scratch, for your exact operations.
+          </p>
+          <p className="mt-3 hidden font-inter text-[11px] uppercase tracking-[0.2em] text-[#C9A84C]/70 sm:block">
             100% Custom &nbsp;·&nbsp; B2B Only &nbsp;·&nbsp; Setup + Retainer
-          </motion.p>
+          </p>
         </motion.div>
 
-        {/* CTAs — stacked on mobile, row on desktop */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 1.3, ease: E }}
-          className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center"
+        {/* CTAs */}
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.3, ease: EASE }}
+          className="mt-10 flex flex-col gap-3 sm:flex-row"
         >
-          <a
-            href="#contact"
-            className="btn-active group flex w-full items-center justify-center gap-2 rounded-full bg-black px-8 py-4 font-inter text-base font-semibold text-black transition-all duration-300 hover:bg-black/90 hover:shadow-[0_0_50px_rgba(255,255,255,0.3)] hover:scale-[1.03] sm:w-auto"
-            style={{ boxShadow: 'none' }}
-          >
-            Book a Free Discovery Call
-            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+          <a href="#contact" className="btn-primary">
+            Book a Free Discovery Call <ArrowRight className="h-3.5 w-3.5" />
           </a>
-          <a
-            href="#solutions"
-            className="btn-active flex w-full items-center justify-center rounded-full border-2 border-black/20 px-8 py-4 font-inter text-base font-medium text-black/60 transition-all duration-300 hover:border-white/50 hover:text-white hover:bg-black/5 sm:w-auto"
-          >
+          <a href="#solutions" className="btn-ghost">
             See What We Build
           </a>
         </motion.div>
       </motion.div>
 
-      {/* Floating AI status card — desktop only */}
+      {/* Floating AI card — desktop only */}
       <motion.div
-        style={{ x: cardX, opacity: cardOpacity }}
-        className="pointer-events-none absolute right-8 top-1/2 hidden w-72 -translate-y-1/2 md:right-16 md:block"
+        style={{ x: cardX, opacity: cardOpacity, position: 'absolute', right: '5rem', top: '50%', transform: 'translateY(-50%)' } as any}
+        className="pointer-events-none hidden lg:block"
       >
         <motion.div
-          animate={{ y: [0, -20, 0], rotate: [-2, 2, -2] }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          className="rounded-2xl border border-white/10 bg-black/[0.04] p-5 backdrop-blur-xl"
-          style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.10)' }}
+          animate={{ y: [0, -14, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+          style={{
+            background: 'rgba(245,240,232,0.95)',
+            border: '1px solid rgba(201,168,76,0.2)',
+            boxShadow: '0 8px 40px rgba(26,26,26,0.08)',
+            padding: '20px 24px', width: 260,
+          }}
         >
           <div className="flex items-center justify-between">
-            <span className="font-syne text-sm font-semibold text-black">AI System Active</span>
-            <span className="h-2 w-2 rounded-full bg-[#10B981] animate-pulse" />
+            <span className="font-syne text-[13px] font-semibold text-[#1A1A1A]">AI System Active</span>
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
           </div>
-
           <div className="mt-4 space-y-2.5">
-            {['Lead qualification', 'Data sync', 'Workflow trigger'].map((label, i) => (
-              <div key={label} className="flex items-center gap-2.5">
-                <motion.span
-                  className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#10B981]"
+            {['Lead qualification', 'Data sync', 'Workflow trigger'].map((l, i) => (
+              <div key={l} className="flex items-center gap-2">
+                <motion.span className="h-1.5 w-1.5 rounded-full bg-emerald-500"
                   animate={{ opacity: [0.4, 1, 0.4] }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut', delay: i * 0.3 }}
-                />
-                <span className="font-inter text-xs font-light text-black/50">{label}</span>
+                  transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.3 }} />
+                <span className="font-inter text-[11px] text-[#1A1A1A]/50">{l}</span>
               </div>
             ))}
           </div>
-
-          {/* Mini bar chart */}
-          <div className="mt-4 flex h-12 items-end gap-1.5">
+          <div className="mt-4 flex h-10 items-end gap-1">
             {[40, 70, 50, 90, 60, 80, 45].map((h, i) => (
-              <motion.div
-                key={i}
-                className="flex-1 rounded-sm"
-                style={{ background: 'rgba(0,102,204,0.35)' }}
-                initial={{ height: '10%' }}
-                animate={{ height: `${h}%` }}
-                transition={{ duration: 1.2, delay: i * 0.1, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }}
-              />
+              <motion.div key={i} className="flex-1"
+                style={{ background: 'rgba(201,168,76,0.4)' }}
+                initial={{ height: '10%' }} animate={{ height: `${h}%` }}
+                transition={{ duration: 1.2, delay: i * 0.1, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }} />
             ))}
           </div>
-
-          <div className="mt-4 border-t border-black/[0.06] pt-3">
-            <span className="font-syne text-xl font-extrabold text-black">12</span>
-            <span className="ml-1.5 font-inter text-xs font-light text-black/40">processes automated</span>
+          <div className="mt-4 border-t pt-3" style={{ borderColor: 'rgba(201,168,76,0.15)' }}>
+            <span className="font-syne text-xl font-bold text-[#1A1A1A]">12</span>
+            <span className="ml-1.5 font-inter text-[11px] text-[#1A1A1A]/40">processes automated</span>
           </div>
         </motion.div>
       </motion.div>
 
-      {/* Scroll indicator — desktop only */}
-      <div className="absolute bottom-10 right-10 hidden items-end gap-3 md:flex">
-        <span
-          className="font-mono text-[9px] tracking-[0.4em] text-black/15"
-          style={{ writingMode: 'vertical-rl' }}
-        >
-          SCROLL
-        </span>
-        <div className="flex flex-col items-center gap-1">
-          <motion.div
-            className="h-12 w-px bg-gradient-to-b from-black/25 to-transparent"
-            animate={{ scaleY: [0.4, 1, 0.4] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <motion.div
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-black/20">
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </motion.div>
-        </div>
+      {/* Scroll cue */}
+      <div className="absolute bottom-8 right-8 hidden items-end gap-2 md:flex">
+        <span className="font-inter text-[9px] uppercase tracking-[0.4em] text-[#1A1A1A]/30"
+          style={{ writingMode: 'vertical-rl' }}>Scroll</span>
+        <motion.div className="h-10 w-px" style={{ background: 'rgba(201,168,76,0.4)' }}
+          animate={{ scaleY: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }} />
       </div>
-    </div>
-    </div>
+    </section>
   )
 }

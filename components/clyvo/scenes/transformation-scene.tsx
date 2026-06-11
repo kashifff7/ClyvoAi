@@ -2,39 +2,26 @@
 
 import { useRef, useEffect } from 'react'
 import { motion } from 'motion/react'
-import { EASE_CINEMATIC } from '@/lib/utils'
 import { Bot, Workflow, Brain, Phone, Plug } from 'lucide-react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useIsMobile } from '@/lib/device'
 
+const EASE = [0.16, 1, 0.3, 1] as const
+const VP   = { once: true, margin: '-60px' } as const
+
 const SERVICES = [
-  {
-    num: '01', icon: Bot,
-    title: 'AI Chatbots & Assistants',
-    description: 'Custom-trained agents for support, sales qualification, and onboarding — integrated into your existing platforms.',
-  },
-  {
-    num: '02', icon: Workflow,
-    title: 'Workflow & Process Automation',
-    description: 'End-to-end automation of repetitive processes — lead routing, document handling, approvals, data entry elimination.',
-  },
-  {
-    num: '03', icon: Brain,
-    title: 'Custom AI Model Development',
-    description: 'Bespoke ML and LLM models trained on your data — predictive analytics, classification, content generation.',
-  },
-  {
-    num: '04', icon: Phone,
-    title: 'AI Voice Agents',
-    description: 'Intelligent voice systems for inbound and outbound calls — customer service, appointment booking, qualification.',
-  },
-  {
-    num: '05', icon: Plug,
-    title: 'System Integrations',
-    description: 'AI connected into your existing stack — Salesforce, HubSpot, SAP, NetSuite, APIs, and databases.',
-  },
+  { num: '01', icon: Bot,      title: 'AI Chatbots & Assistants',        description: 'Custom-trained agents for support, sales qualification, and onboarding — integrated into your existing platforms.' },
+  { num: '02', icon: Workflow, title: 'Workflow & Process Automation',   description: 'End-to-end automation of repetitive processes — lead routing, document handling, approvals, data entry elimination.' },
+  { num: '03', icon: Brain,    title: 'Custom AI Model Development',     description: 'Bespoke ML and LLM models trained on your data — predictive analytics, classification, content generation.' },
+  { num: '04', icon: Phone,    title: 'AI Voice Agents',                 description: 'Intelligent voice systems for inbound and outbound calls — customer service, appointment booking, qualification.' },
+  { num: '05', icon: Plug,     title: 'System Integrations',             description: 'AI connected into your existing stack — Salesforce, HubSpot, SAP, NetSuite, APIs, and databases.' },
 ]
+
+const SERVICE_HREFS: Record<string, string> = {
+  '01': 'ai-chatbots', '02': 'workflow-automation', '03': 'custom-ai-models',
+  '04': 'voice-agents', '05': 'system-integrations',
+}
 
 export function TransformationScene() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -42,101 +29,44 @@ export function TransformationScene() {
   const isMobile   = useIsMobile()
 
   useEffect(() => {
-    // Check synchronously — skip GSAP pin entirely on mobile
     if (window.innerWidth < 768) return
-
     gsap.registerPlugin(ScrollTrigger)
-
-    const section = sectionRef.current
-    const track   = trackRef.current
+    const section = sectionRef.current, track = trackRef.current
     if (!section || !track) return
-
     const ctx = gsap.context(() => {
-      const getScrollAmount = () => -(track.scrollWidth - window.innerWidth + 96)
-
-      const tween = gsap.to(track, {
-        x: getScrollAmount,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: section,
-          pin: true,
-          scrub: 1.2,
-          start: 'top top',
-          end: () => `+=${Math.abs(getScrollAmount())}`,
-          invalidateOnRefresh: true,
-        },
+      const getAmt = () => -(track.scrollWidth - window.innerWidth + 96)
+      gsap.to(track, {
+        x: getAmt, ease: 'none',
+        scrollTrigger: { trigger: section, pin: true, scrub: 1, start: 'top top', end: () => `+=${Math.abs(getAmt())}`, invalidateOnRefresh: true },
       })
-
-      return () => { tween.scrollTrigger?.kill(); tween.kill() }
     }, section)
-
     return () => ctx.revert()
   }, [])
 
   return (
-    <section
-      ref={sectionRef}
-      id="services-scene"
-      className="relative overflow-hidden"
-      style={{ height: isMobile ? 'auto' : '100vh' }}
-    >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.07] to-transparent" />
+    <section ref={sectionRef} id="services" className="relative overflow-hidden"
+      style={{ height: isMobile ? 'auto' : '100vh', background: '#EDE6D6' }}>
+      <div className="gold-rule absolute inset-x-0 top-0" />
 
-      {/* Header */}
-      <div className="relative px-5 pb-8 pt-16 md:px-16 md:pb-10 md:pt-20">
-        <motion.span
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.8 }}
-          transition={{ duration: 0.5, ease: EASE_CINEMATIC }}
-          className="font-inter font-medium text-[11px] uppercase tracking-[0.18em] text-black/40"
-        >
-          What We Build
-        </motion.span>
-
-        <h2 className="mt-4 font-syne text-2xl font-bold tracking-[-0.03em] text-black sm:text-3xl md:text-5xl" style={{ fontFeatureSettings: "'ss01'" }}>
-          {['Five', 'capabilities.', 'Infinite', 'applications.'].map((word, i) => (
-            <motion.span
-              key={word}
-              className="mr-[0.22em] inline-block last:mr-0"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.6 }}
-              transition={{ duration: 0.6, delay: i * 0.06, ease: EASE_CINEMATIC }}
-            >
-              {word}
-            </motion.span>
-          ))}
+      <div className="relative px-6 pb-10 pt-20 md:px-16 md:pt-24">
+        <div className="section-divider" />
+        <span className="eyebrow">What We Build</span>
+        <h2 className="mt-6 headline-luxury" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 3rem)' }}>
+          Five capabilities. Infinite applications.
         </h2>
-
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.6 }}
-          transition={{ duration: 0.6, delay: 0.25, ease: EASE_CINEMATIC }}
-          className="mt-3 max-w-xl font-inter text-sm font-light text-black/50 md:text-base"
-        >
+        <p className="mt-4 max-w-lg font-inter text-sm font-light leading-[1.8] text-[#4A4A4A]">
           Every engagement is built from scratch around your business.
-        </motion.p>
+        </p>
       </div>
 
-      {/* Cards — vertical stack on mobile, horizontal scroll on desktop */}
       {isMobile ? (
-        <div className="flex flex-col gap-4 px-5 pb-16">
-          {SERVICES.map((s, i) => (
-            <ServiceCard key={s.num} s={s} index={i} fullWidth />
-          ))}
+        <div className="flex flex-col gap-4 px-6 pb-16">
+          {SERVICES.map((s, i) => <ServiceCard key={s.num} s={s} index={i} fullWidth />)}
         </div>
       ) : (
-        <div className="relative overflow-visible px-8 md:px-16">
-          <div
-            ref={trackRef}
-            className="flex gap-5 will-change-transform"
-            style={{ width: 'max-content' }}
-          >
-            {SERVICES.map((s, i) => (
-              <ServiceCard key={s.num} s={s} index={i} />
-            ))}
+        <div className="overflow-visible px-10 md:px-16">
+          <div ref={trackRef} className="flex gap-6 will-change-transform" style={{ width: 'max-content' }}>
+            {SERVICES.map((s, i) => <ServiceCard key={s.num} s={s} index={i} />)}
             <div className="w-16 shrink-0" />
           </div>
         </div>
@@ -145,42 +75,23 @@ export function TransformationScene() {
   )
 }
 
-function ServiceCard({
-  s,
-  index,
-  fullWidth = false,
-}: {
-  s: typeof SERVICES[0]
-  index: number
-  fullWidth?: boolean
-}) {
+function ServiceCard({ s, index, fullWidth = false }: { s: typeof SERVICES[0]; index: number; fullWidth?: boolean }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.5, delay: index * 0.06, ease: EASE_CINEMATIC }}
-      className={`group flex shrink-0 flex-col rounded-xl border border-white/[0.10] bg-[#0d0d0d] p-7 transition-all duration-300 hover:border-white/[0.15] hover:-translate-y-[3px] will-change-transform
-        ${fullWidth ? 'w-full' : 'w-[360px]'}`}
-      style={{ minHeight: fullWidth ? undefined : 320 }}
+      initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+      viewport={VP} transition={{ duration: 0.7, delay: index * 0.07, ease: EASE }}
+      className={`luxury-card flex shrink-0 flex-col p-8 ${fullWidth ? 'w-full' : 'w-[340px]'}`}
+      style={{ minHeight: fullWidth ? undefined : 320, background: '#FFFFFF' }}
     >
-      <span className="font-syne text-3xl font-bold tracking-tight text-black/15">
-        {s.num}
-      </span>
-
-      <div className="mt-5 flex h-11 w-11 items-center justify-center rounded-xl border border-white/[0.10]">
-        <s.icon className="h-5 w-5 text-black/55" />
+      <span className="font-syne text-2xl font-bold text-[#C9A84C]/40">{s.num}</span>
+      <div className="mt-5 flex h-10 w-10 items-center justify-center"
+        style={{ border: '1px solid rgba(201,168,76,0.3)', background: 'rgba(201,168,76,0.04)' }}>
+        <s.icon className="h-4 w-4 text-[#C9A84C]" />
       </div>
-
-      <h3 className="mt-5 font-syne text-lg font-semibold text-black md:text-xl">{s.title}</h3>
-      <p className="mt-3 font-inter text-sm font-light leading-[1.75] text-black/50">
-        {s.description}
-      </p>
-
-      <a
-        href={`/services/${s.num === '01' ? 'ai-chatbots' : s.num === '02' ? 'workflow-automation' : s.num === '03' ? 'custom-ai-models' : s.num === '04' ? 'voice-agents' : 'system-integrations'}`}
-        className="mt-auto pt-6 font-inter text-xs text-black/35 underline-offset-2 transition-colors hover:text-[#0066cc]"
-      >
+      <h3 className="mt-5 font-syne text-base font-semibold text-[#1A1A1A]">{s.title}</h3>
+      <p className="mt-3 font-inter text-sm font-light leading-[1.8] text-[#4A4A4A]">{s.description}</p>
+      <a href={`/services/${SERVICE_HREFS[s.num]}`}
+        className="mt-auto pt-6 font-inter text-[11px] uppercase tracking-[0.12em] text-[#C9A84C] transition-opacity hover:opacity-70">
         Learn more →
       </a>
     </motion.div>

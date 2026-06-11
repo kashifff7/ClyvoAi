@@ -6,61 +6,49 @@ const SECTIONS = [
   { id: 'home',         label: 'Home' },
   { id: 'solutions',    label: 'Problem' },
   { id: 'services',     label: 'Services' },
-  { id: 'how-it-works', label: 'How It Works' },
-  { id: 'about',        label: 'About' },
+  { id: 'how-it-works', label: 'Process' },
+  { id: 'about',        label: 'Clients' },
   { id: 'pricing',      label: 'Pricing' },
   { id: 'contact',      label: 'Contact' },
 ]
 
 export function ScrollDots() {
-  const [active, setActive] = useState(0)
+  const [active, setActive] = useState('home')
 
   useEffect(() => {
-    const elements = SECTIONS
-      .map((s) => document.getElementById(s.id))
-      .filter((el): el is HTMLElement => el !== null)
-
-    const observer = new IntersectionObserver(
+    const obs = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const idx = elements.indexOf(entry.target as HTMLElement)
-            if (idx !== -1) setActive(idx)
-          }
-        })
+        entries.forEach((e) => { if (e.isIntersecting) setActive(e.target.id) })
       },
-      { rootMargin: '-50% 0px -50% 0px', threshold: 0 }
+      { threshold: 0.4 }
     )
-
-    elements.forEach((el) => observer.observe(el))
-    return () => observer.disconnect()
+    SECTIONS.forEach(({ id }) => {
+      const el = document.getElementById(id)
+      if (el) obs.observe(el)
+    })
+    return () => obs.disconnect()
   }, [])
 
-  function scrollToSection(id: string) {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
-  }
-
   return (
-    <div className="fixed right-5 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-3 md:flex">
-      {SECTIONS.map((s, i) => (
-        <button
-          key={s.id}
-          type="button"
-          aria-label={`Scroll to ${s.label}`}
-          onClick={() => scrollToSection(s.id)}
-          className="flex h-4 w-4 items-center justify-center"
+    <nav className="fixed right-6 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-3 md:flex">
+      {SECTIONS.map(({ id, label }) => (
+        <button key={id} onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })}
+          title={label}
+          className="group relative flex items-center justify-end gap-2"
         >
+          <span className="hidden font-inter text-[10px] uppercase tracking-[0.12em] text-[#1A1A1A]/40 opacity-0 transition-opacity group-hover:opacity-100">
+            {label}
+          </span>
           <span
             className="block rounded-full transition-all duration-300"
             style={{
-              width: 6,
+              width: active === id ? 20 : 6,
               height: 6,
-              backgroundColor: i === active ? '#ffffff' : 'rgba(255,255,255,0.20)',
-              transform: i === active ? 'scale(1.5)' : 'scale(1)',
+              background: active === id ? '#C9A84C' : 'rgba(26,26,26,0.2)',
             }}
           />
         </button>
       ))}
-    </div>
+    </nav>
   )
 }
