@@ -7,7 +7,7 @@ import { Menu, X, ChevronDown, MessageSquare, GitBranch, Cpu, Phone, Link2 } fro
 
 /* ─── Logo filter chain ─────────────────────────────────────── */
 const LOGO_FILTER = [
-  'invert(1)',
+  'invert(0)',
   'sepia(1)',
   'saturate(5)',
   'hue-rotate(155deg)',
@@ -27,7 +27,7 @@ function LogoBadge({ size = 32 }: { size?: number }) {
         objectFit:    'contain',
         flexShrink:   0,
         filter:       LOGO_FILTER,
-        mixBlendMode: 'screen',
+        mixBlendMode: 'normal',
         animation:    'logo-float-3d 5s ease-in-out infinite',
       }}
     />
@@ -86,16 +86,16 @@ function SolutionsDropdown({ onClose }: { onClose: () => void }) {
       animate={{ opacity: 1, y: 0,  scale: 1    }}
       exit={{    opacity: 0, y: -6, scale: 0.98 }}
       transition={{ duration: 0.20, ease: E }}
-      className="absolute left-1/2 top-full z-50 mt-2 w-64 -translate-x-1/2 rounded-2xl border border-white/10 bg-[#0a0a0a] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.8)]"
+      className="absolute left-1/2 top-full z-50 mt-2 w-64 -translate-x-1/2 rounded-2xl border border-black/8 bg-white p-4 shadow-[0_8px_40px_rgba(0,0,0,0.12)]"
     >
       {SERVICES.map((s) => (
         <a
           key={s.href}
           href={s.href}
           onClick={onClose}
-          className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 font-inter text-sm text-white/60 transition-all hover:bg-white/5 hover:text-white"
+          className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 font-inter text-sm text-black/50 transition-all hover:bg-black/5 hover:text-black"
         >
-          <span className="text-white/35">{s.icon}</span>
+          <span className="text-black/30">{s.icon}</span>
           {s.name}
         </a>
       ))}
@@ -148,7 +148,7 @@ export function Navigation() {
             {/* Logo */}
             <a href="/" className="mr-2 flex items-center gap-2">
               <LogoBadge size={36} />
-              <span className="hidden font-syne text-sm font-semibold text-white sm:block whitespace-nowrap">
+              <span className="hidden font-syne text-sm font-semibold text-black sm:block whitespace-nowrap">
                 Clyvo <span style={{ color: '#00E5FF' }}>AI</span>
               </span>
             </a>
@@ -163,7 +163,7 @@ export function Navigation() {
               >
                 <button
                   type="button"
-                  className="nav-link flex items-center gap-1 whitespace-nowrap px-3 font-inter text-[13px] text-white/45 transition-colors duration-200 hover:text-white"
+                  className="nav-link flex items-center gap-1 whitespace-nowrap px-3 font-inter text-[13px] text-black/50 transition-colors duration-200 hover:text-black"
                   onClick={() => setSolutionsOpen((v) => !v)}
                   aria-expanded={solutionsOpen}
                 >
@@ -183,7 +183,7 @@ export function Navigation() {
                 <a
                   key={link.href}
                   href={link.href}
-                  className="nav-link whitespace-nowrap px-3 font-inter text-[13px] text-white/45 transition-colors duration-200 hover:text-white"
+                  className="nav-link whitespace-nowrap px-3 font-inter text-[13px] text-black/50 transition-colors duration-200 hover:text-black"
                 >
                   {link.label}
                 </a>
@@ -193,7 +193,7 @@ export function Navigation() {
             {/* Desktop CTA */}
             <a
               href="/book"
-              className="ml-2 hidden whitespace-nowrap rounded-full border border-white/20 bg-white px-5 py-2 font-inter text-[13px] font-medium text-black transition-all duration-200 hover:bg-white/90 hover:scale-[1.02] md:block"
+              className="ml-2 hidden whitespace-nowrap rounded-full border border-black/20 bg-black px-5 py-2 font-inter text-[13px] font-medium text-white transition-all duration-200 hover:bg-black/80 hover:scale-[1.02] md:block"
             >
               Book a Discovery Call
             </a>
@@ -202,7 +202,7 @@ export function Navigation() {
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
-              className="ml-1 flex h-11 w-11 items-center justify-center rounded-full text-white/50 hover:text-white md:hidden"
+              className="ml-1 flex h-11 w-11 items-center justify-center rounded-full text-black/50 hover:text-black md:hidden"
               aria-label="Open menu"
             >
               <Menu className="h-4 w-4" />
@@ -220,21 +220,21 @@ export function Navigation() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25, ease: E }}
-            className="fixed inset-0 z-[60] flex max-h-screen flex-col overflow-y-auto px-8 py-8 backdrop-blur-2xl"
+            className="fixed inset-0 z-[60] flex max-h-screen flex-col overflow-y-auto px-8 py-8 bg-[#f8f8f6] backdrop-blur-2xl"
             style={{ background: 'rgba(0,0,0,0.96)' }}
           >
             {/* Top row */}
             <div className="flex items-center justify-between">
               <a href="/" className="flex items-center gap-2.5" onClick={closeMobile}>
                 <LogoBadge size={40} />
-                <span className="font-syne text-lg font-bold text-white">
+                <span className="font-syne text-lg font-bold text-black">
                   Clyvo <span style={{ color: '#00E5FF' }}>AI</span>
                 </span>
               </a>
               <button
                 type="button"
                 onClick={closeMobile}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white/50 hover:text-white"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-black/10 text-black/50 hover:text-black"
                 aria-label="Close menu"
               >
                 <X className="h-4 w-4" />
@@ -247,7 +247,7 @@ export function Navigation() {
               <button
                 type="button"
                 onClick={() => setMobileExpanded((v) => !v)}
-                className="flex items-center justify-between rounded-xl px-5 py-4 font-syne text-2xl font-bold text-white/60 transition-colors hover:bg-white/[0.04] hover:text-white"
+                className="flex items-center justify-between rounded-xl px-5 py-4 font-syne text-2xl font-bold text-black/60 transition-colors hover:bg-black/[0.04] hover:text-black"
               >
                 Solutions
                 <ChevronDown
@@ -272,7 +272,7 @@ export function Navigation() {
                           key={s.href}
                           href={s.href}
                           onClick={closeMobile}
-                          className="block w-full pl-8 py-3 font-inter text-sm text-white/50 transition-colors hover:text-white"
+                          className="block w-full pl-8 py-3 font-inter text-sm text-black/50 transition-colors hover:text-black"
                         >
                           {s.name}
                         </a>
@@ -290,7 +290,7 @@ export function Navigation() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.05 * i, duration: 0.4, ease: E }}
-                  className="rounded-xl px-5 py-4 font-syne text-2xl font-bold text-white/60 transition-colors hover:bg-white/[0.04] hover:text-white"
+                  className="rounded-xl px-5 py-4 font-syne text-2xl font-bold text-black/60 transition-colors hover:bg-black/[0.04] hover:text-black"
                 >
                   {link.label}
                 </motion.a>

@@ -1,54 +1,38 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import dynamic from 'next/dynamic'
-import { useIsMobile } from '@/lib/device'
-
-// Lazy-load the heavy WebGL canvas — don't block initial paint
-const BeamsCanvas = dynamic(() => import('./beams-background'), { ssr: false })
-const ParticleCanvas = dynamic(() => import('./global-background-canvas'), { ssr: false })
+// Light theme global background — subtle noise texture and soft gradient orbs.
+// No WebGL — keeps performance clean on light background.
 
 export function GlobalBackground() {
-  const isMobile = useIsMobile()
-  const [ready, setReady] = useState(false)
-
-  useEffect(() => {
-    const t = setTimeout(() => setReady(true), 800)
-    return () => clearTimeout(t)
-  }, [])
-
   return (
-    // NOTE: no overflow-hidden here — the canvas is fixed positioned and must
-    // NOT be clipped by its parent. Use pointer-events-none so it never
-    // intercepts clicks.
     <div className="pointer-events-none fixed inset-0 z-0">
-      {/* Ambient cyan gradient orbs — CSS only, zero perf cost */}
+      {/* Soft warm orb top-right */}
       <div style={{
         position: 'absolute',
         width: '60vw', height: '60vw',
-        top: '-20vw', right: '-20vw',
-        background: 'radial-gradient(circle, rgba(0,229,255,0.07) 0%, transparent 70%)',
-        filter: 'blur(140px)',
+        top: '-15vw', right: '-15vw',
+        background: 'radial-gradient(circle, rgba(0,102,204,0.06) 0%, transparent 70%)',
+        filter: 'blur(80px)',
         animation: 'float-a 14s ease-in-out infinite',
-        pointerEvents: 'none',
       }} />
+      {/* Soft cool orb bottom-left */}
       <div style={{
         position: 'absolute',
         width: '50vw', height: '50vw',
-        bottom: '-15vw', left: '-15vw',
-        background: 'radial-gradient(circle, rgba(14,165,233,0.05) 0%, transparent 70%)',
-        filter: 'blur(120px)',
+        bottom: '-10vw', left: '-10vw',
+        background: 'radial-gradient(circle, rgba(0,82,163,0.04) 0%, transparent 70%)',
+        filter: 'blur(100px)',
         animation: 'float-b 18s ease-in-out infinite',
-        pointerEvents: 'none',
       }} />
-
-      {/* Beams WebGL — desktop only, mounted after initial paint */}
-      {!isMobile && ready && (
-        <>
-          <BeamsCanvas />
-          <ParticleCanvas />
-        </>
-      )}
+      {/* Subtle noise texture */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E")`,
+        backgroundSize: '200px 200px',
+        opacity: 0.018,
+        mixBlendMode: 'multiply',
+      }} />
     </div>
   )
 }

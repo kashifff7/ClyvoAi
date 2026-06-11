@@ -35,13 +35,13 @@ export function ProblemScene() {
 
           {/* Left */}
           <motion.div variants={staggerItem}>
-            <span className="font-inter font-medium text-[11px] uppercase tracking-[0.18em] text-white/35">
+            <span className="font-inter font-medium text-[11px] uppercase tracking-[0.18em] text-black/40">
               The Problem
             </span>
-            <h2 className="mt-4 text-balance font-syne text-2xl font-bold leading-tight tracking-[-0.03em] text-white sm:text-3xl md:text-5xl" style={{ fontFeatureSettings: "'ss01'" }}>
+            <h2 className="mt-4 text-balance font-syne text-2xl font-bold leading-tight tracking-[-0.03em] text-black sm:text-3xl md:text-5xl" style={{ fontFeatureSettings: "'ss01'" }}>
               Generic AI wasn&apos;t built for your business.
             </h2>
-            <p className="mt-5 max-w-lg text-balance font-inter text-sm font-light leading-[1.75] text-white/45 md:text-base">
+            <p className="mt-5 max-w-lg text-balance font-inter text-sm font-light leading-[1.75] text-black/50 md:text-base">
               Most B2B teams are stuck choosing between two bad options — neither designed
               around how their business actually operates.
             </p>
@@ -56,10 +56,10 @@ export function ProblemScene() {
                 className="rounded-xl border border-white/[0.10] bg-[#0d0d0d] p-6 transition-all duration-300 hover:border-white/[0.15] hover:-translate-y-[3px] md:p-7"
               >
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.10]">
-                  <alt.icon className="h-5 w-5 text-white/50" />
+                  <alt.icon className="h-5 w-5 text-black/55" />
                 </div>
-                <h3 className="mt-4 font-syne text-base font-semibold text-white">{alt.title}</h3>
-                <p className="mt-2 font-inter text-sm font-light leading-[1.75] text-white/45">
+                <h3 className="mt-4 font-syne text-base font-semibold text-black">{alt.title}</h3>
+                <p className="mt-2 font-inter text-sm font-light leading-[1.75] text-black/50">
                   {alt.description}
                 </p>
               </motion.div>
@@ -72,9 +72,9 @@ export function ProblemScene() {
           variants={staggerItem}
           className="mt-12 w-full rounded-xl border border-white/[0.10] bg-[#0d0d0d] p-6 text-center md:mt-16 md:p-12"
         >
-          <p className="font-syne text-xl font-bold text-white sm:text-2xl md:text-3xl">
+          <p className="font-syne text-xl font-bold text-black sm:text-2xl md:text-3xl">
             Clyvo AI is the{' '}
-            <span style={{ color: '#00E5FF' }}>sharp, expert, custom</span>{' '}
+            <span style={{ color: '#0066cc' }}>sharp, expert, custom</span>{' '}
             alternative.
           </p>
         </motion.div>

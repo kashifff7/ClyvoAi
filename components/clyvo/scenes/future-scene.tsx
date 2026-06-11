@@ -48,13 +48,13 @@ export function FutureScene() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.5, ease: EASE_CINEMATIC }}
-          className="font-inter font-medium text-[11px] uppercase tracking-[0.18em] text-white/35"
+          className="font-inter font-medium text-[11px] uppercase tracking-[0.18em] text-black/40"
         >
           What&apos;s Next
         </motion.span>
 
         <h2
-          className="mt-5 font-syne font-extrabold tracking-[-0.03em] text-white"
+          className="mt-5 font-syne font-extrabold tracking-[-0.03em] text-black"
           style={{ fontSize: 'clamp(1.9rem, 5.5vw, 4rem)', lineHeight: 1.08, fontFeatureSettings: "'ss01'" }}
         >
           {HEADLINE_WORDS.map((word, i) => (
@@ -76,7 +76,7 @@ export function FutureScene() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.6, delay: 0.4, ease: EASE_CINEMATIC }}
-          className="mt-6 max-w-xl font-inter text-sm font-light leading-[1.75] text-white/45 md:text-base"
+          className="mt-6 max-w-xl font-inter text-sm font-light leading-[1.75] text-black/50 md:text-base"
         >
           Start with a free 45-minute discovery call. No commitment. No hard sell. Just clarity.
         </motion.p>
@@ -99,7 +99,7 @@ export function FutureScene() {
           </a>
           <a
             href="/apply"
-            className="btn-active flex w-full items-center justify-center rounded-full border border-white/10 px-8 py-4 font-inter text-sm font-medium text-white/50 transition-all duration-300 hover:border-white/20 hover:text-white/80 sm:w-auto"
+            className="btn-active flex w-full items-center justify-center rounded-full border border-black/8 px-8 py-4 font-inter text-sm font-medium text-black/55 transition-all duration-300 hover:border-black/15 hover:text-black/75 sm:w-auto"
           >
             Submit an Application
           </a>

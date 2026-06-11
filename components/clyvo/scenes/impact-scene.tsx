@@ -30,7 +30,7 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
   }, [inView, value])
 
   return (
-    <span ref={ref} className="font-syne text-4xl font-extrabold sm:text-5xl md:text-6xl" style={{ color: '#00E5FF' }}>
+    <span ref={ref} className="font-syne text-4xl font-extrabold sm:text-5xl md:text-6xl" style={{ color: '#0066cc' }}>
       {count}{suffix}
     </span>
   )
@@ -66,13 +66,13 @@ export function ImpactScene() {
         variants={staggerContainer}
       >
         <motion.div variants={staggerItem} className="mb-12 md:mb-16">
-          <span className="font-inter font-medium text-[11px] uppercase tracking-[0.18em] text-white/35">
+          <span className="font-inter font-medium text-[11px] uppercase tracking-[0.18em] text-black/40">
             Pricing
           </span>
-          <h2 className="mt-4 text-balance font-syne text-2xl font-bold tracking-[-0.03em] text-white sm:text-3xl md:text-5xl" style={{ fontFeatureSettings: "'ss01'" }}>
+          <h2 className="mt-4 text-balance font-syne text-2xl font-bold tracking-[-0.03em] text-black sm:text-3xl md:text-5xl" style={{ fontFeatureSettings: "'ss01'" }}>
             One model. Full accountability.
           </h2>
-          <p className="mt-4 max-w-xl font-inter text-sm font-light leading-[1.75] text-white/45 md:text-base">
+          <p className="mt-4 max-w-xl font-inter text-sm font-light leading-[1.75] text-black/50 md:text-base">
             A one-time setup fee to build your system, and a monthly retainer
             to keep it running and improving.
           </p>
@@ -86,7 +86,7 @@ export function ImpactScene() {
           {STATS.map((s) => (
             <div key={s.label} className="text-center">
               <Counter value={s.value} suffix={s.suffix} />
-              <p className="mt-2 font-inter text-xs font-light uppercase tracking-[0.15em] text-white/40 md:text-sm">
+              <p className="mt-2 font-inter text-xs font-light uppercase tracking-[0.15em] text-black/45 md:text-sm">
                 {s.label}
               </p>
             </div>
@@ -112,23 +112,23 @@ export function ImpactScene() {
             >
               <div className="flex items-center gap-4">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.10]">
-                  <p.icon className="h-5 w-5 text-white/50" />
+                  <p.icon className="h-5 w-5 text-black/55" />
                 </div>
                 <div>
-                  <h3 className="font-syne text-base font-semibold text-white md:text-lg">{p.title}</h3>
-                  <span className="font-mono text-xs uppercase tracking-widest text-white/35">
+                  <h3 className="font-syne text-base font-semibold text-black md:text-lg">{p.title}</h3>
+                  <span className="font-mono text-xs uppercase tracking-widest text-black/40">
                     {p.note}
                   </span>
                 </div>
               </div>
 
-              <p className="mt-5 font-inter text-sm font-light leading-[1.75] text-white/45">
+              <p className="mt-5 font-inter text-sm font-light leading-[1.75] text-black/50">
                 {p.description}
               </p>
 
               <ul className="mt-5 space-y-2.5">
                 {p.deliverables.map((d) => (
-                  <li key={d} className="flex items-center gap-2.5 font-inter text-sm font-light text-white/50">
+                  <li key={d} className="flex items-center gap-2.5 font-inter text-sm font-light text-black/55">
                     <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-white/35" />
                     {d}
                   </li>
@@ -142,7 +142,7 @@ export function ImpactScene() {
           variants={staggerItem}
           className="mt-12 flex flex-col items-center gap-6 text-center md:mt-16"
         >
-          <p className="font-inter text-sm font-light text-white/35 md:text-base">
+          <p className="font-inter text-sm font-light text-black/40 md:text-base">
             No fixed package tiers. Every solution is scoped to your real problem.
           </p>
           <a

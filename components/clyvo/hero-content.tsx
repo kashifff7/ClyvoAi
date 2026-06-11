@@ -8,13 +8,9 @@ import { ArrowRight } from 'lucide-react'
 const E = [0.22, 1, 0.36, 1] as const
 
 const LOGO_FILTER = [
-  'invert(1)',
-  'sepia(1)',
-  'saturate(5)',
-  'hue-rotate(155deg)',
-  'drop-shadow(0 0 5px rgba(0,229,255,0.95))',
-  'drop-shadow(0 0 14px rgba(0,229,255,0.60))',
-  'drop-shadow(0 0 28px rgba(0,229,255,0.25))',
+  'hue-rotate(200deg)',
+  'saturate(1.5)',
+  'brightness(0.4)',
 ].join(' ')
 
 // Deterministic white particles — fewer on mobile
@@ -65,15 +61,15 @@ export function HeroContent() {
       >
         <div
           className="absolute inset-0"
-          style={{ background: 'radial-gradient(ellipse 70% 50% at 65% 55%, rgba(20,20,20,0.9) 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(ellipse 70% 50% at 65% 55%, rgba(248,248,246,0.9) 0%, transparent 70%)' }}
         />
         <div
           className="absolute inset-0"
-          style={{ background: 'radial-gradient(ellipse 100% 60% at 50% 100%, rgba(180,180,180,0.04) 0%, transparent 50%)' }}
+          style={{ background: 'radial-gradient(ellipse 100% 60% at 50% 100%, rgba(0,102,204,0.03) 0%, transparent 50%)' }}
         />
         <div
           className="absolute inset-0"
-          style={{ background: 'radial-gradient(ellipse 40% 30% at 75% 30%, rgba(0,229,255,0.06) 0%, transparent 60%)' }}
+          style={{ background: 'radial-gradient(ellipse 40% 30% at 75% 30%, rgba(0,102,204,0.05) 0%, transparent 60%)' }}
         />
       </motion.div>
 
@@ -92,7 +88,7 @@ export function HeroContent() {
       {/* Vignette */}
       <div
         className="pointer-events-none absolute inset-0"
-        style={{ background: 'radial-gradient(ellipse at center, transparent 40%, #000000 100%)' }}
+        style={{ background: 'radial-gradient(ellipse at center, transparent 40%, rgba(248,248,246,0.6) 100%)' }}
       />
 
       {/* White particles — hidden on mobile for performance */}
@@ -100,7 +96,7 @@ export function HeroContent() {
         {PARTICLES.map((p, i) => (
           <span
             key={i}
-            className="absolute rounded-full bg-white"
+            className="absolute rounded-full bg-black"
             style={{
               left: p.left, bottom: p.bottom,
               width: p.size, height: p.size,
@@ -121,9 +117,9 @@ export function HeroContent() {
           transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
           className="flex h-32 w-32 items-center justify-center rounded-full border md:h-44 md:w-44"
           style={{
-            background: 'radial-gradient(circle, rgba(0,229,255,0.15) 0%, rgba(0,229,255,0.05) 50%, transparent 70%)',
-            borderColor: 'rgba(0,229,255,0.3)',
-            boxShadow: '0 0 60px rgba(0,229,255,0.4), 0 0 120px rgba(0,229,255,0.2), 0 0 200px rgba(0,229,255,0.08)',
+            background: 'radial-gradient(circle, rgba(0,102,204,0.08) 0%, rgba(0,102,204,0.03) 50%, transparent 70%)',
+            borderColor: 'rgba(0,102,204,0.2)',
+            boxShadow: '0 0 60px rgba(0,102,204,0.15), 0 0 120px rgba(0,102,204,0.08), 0 0 200px rgba(0,102,204,0.04)',
           }}
         >
           <Image
@@ -135,7 +131,7 @@ export function HeroContent() {
             style={{
               objectFit:    'contain',
               filter:       LOGO_FILTER,
-              mixBlendMode: 'screen',
+              mixBlendMode: 'normal',
             }}
           />
         </motion.div>
@@ -151,25 +147,25 @@ export function HeroContent() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2, ease: E }}
-          className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-white/[0.12] bg-white/[0.06] px-4 py-2 backdrop-blur-sm"
+          className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-black/[0.10] bg-black/[0.04] px-4 py-2 backdrop-blur-sm"
         >
           <motion.span
-            className="h-1.5 w-1.5 rounded-full bg-[#00E5FF]"
+            className="h-1.5 w-1.5 rounded-full bg-[#0066cc]"
             animate={{ opacity: [0.4, 1, 0.4] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
           />
-          <span className="font-inter text-xs font-medium text-white/50 tracking-[0.15em]">
+          <span className="font-inter text-xs font-medium text-black/50 tracking-[0.15em]">
             Custom AI Agency · B2B
           </span>
         </motion.div>
 
         {/* Headline — responsive from mobile to cinema */}
         <h1
-          className="font-syne font-extrabold leading-[0.95] text-white"
+          className="font-syne font-extrabold leading-[0.95] text-black"
           style={{
             fontSize: 'clamp(2.2rem, 8vw, 9rem)',
             letterSpacing: '-0.05em',
-            textShadow: '0 0 80px rgba(0,229,255,0.30)',
+            textShadow: 'none',
           }}
         >
           <span className="block whitespace-normal font-playfair font-bold italic md:whitespace-nowrap">
@@ -185,7 +181,7 @@ export function HeroContent() {
               </motion.span>
             ))}
           </span>
-          <span className="block whitespace-normal md:whitespace-nowrap text-white/20">
+          <span className="block whitespace-normal md:whitespace-nowrap text-black/15">
             {WORDS.filter(w => w.line === 1).map((w, i) => (
               <motion.span
                 key={w.text}
@@ -206,7 +202,7 @@ export function HeroContent() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.95, ease: E }}
-            className="mt-5 max-w-[420px] font-inter text-base font-light leading-[1.75] text-white/45 sm:text-lg"
+            className="mt-5 max-w-[420px] font-inter text-base font-light leading-[1.75] text-black/50 sm:text-lg"
           >
             We build end-to-end AI systems for B2B businesses — from scratch,
             for your exact operations.
@@ -216,7 +212,7 @@ export function HeroContent() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 1.1, ease: E }}
-            className="mt-5 hidden font-mono text-sm tracking-widest text-white/20 sm:block"
+            className="mt-5 hidden font-mono text-sm tracking-widest text-black/15 sm:block"
           >
             100% Custom &nbsp;·&nbsp; B2B Only &nbsp;·&nbsp; Setup + Retainer
           </motion.p>
@@ -231,15 +227,15 @@ export function HeroContent() {
         >
           <a
             href="#contact"
-            className="btn-active group flex w-full items-center justify-center gap-2 rounded-full bg-white px-8 py-4 font-inter text-base font-semibold text-black transition-all duration-300 hover:bg-white/90 hover:shadow-[0_0_50px_rgba(255,255,255,0.3)] hover:scale-[1.03] sm:w-auto"
-            style={{ boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.10)' }}
+            className="btn-active group flex w-full items-center justify-center gap-2 rounded-full bg-black px-8 py-4 font-inter text-base font-semibold text-black transition-all duration-300 hover:bg-black/90 hover:shadow-[0_0_50px_rgba(255,255,255,0.3)] hover:scale-[1.03] sm:w-auto"
+            style={{ boxShadow: 'none' }}
           >
             Book a Free Discovery Call
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </a>
           <a
             href="#solutions"
-            className="btn-active flex w-full items-center justify-center rounded-full border-2 border-white/20 px-8 py-4 font-inter text-base font-medium text-white/70 transition-all duration-300 hover:border-white/50 hover:text-white hover:bg-white/5 sm:w-auto"
+            className="btn-active flex w-full items-center justify-center rounded-full border-2 border-black/20 px-8 py-4 font-inter text-base font-medium text-black/60 transition-all duration-300 hover:border-white/50 hover:text-white hover:bg-black/5 sm:w-auto"
           >
             See What We Build
           </a>
@@ -254,11 +250,11 @@ export function HeroContent() {
         <motion.div
           animate={{ y: [0, -20, 0], rotate: [-2, 2, -2] }}
           transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur-xl"
-          style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.6)' }}
+          className="rounded-2xl border border-white/10 bg-black/[0.04] p-5 backdrop-blur-xl"
+          style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.10)' }}
         >
           <div className="flex items-center justify-between">
-            <span className="font-syne text-sm font-semibold text-white">AI System Active</span>
+            <span className="font-syne text-sm font-semibold text-black">AI System Active</span>
             <span className="h-2 w-2 rounded-full bg-[#10B981] animate-pulse" />
           </div>
 
@@ -270,7 +266,7 @@ export function HeroContent() {
                   animate={{ opacity: [0.4, 1, 0.4] }}
                   transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut', delay: i * 0.3 }}
                 />
-                <span className="font-inter text-xs font-light text-white/50">{label}</span>
+                <span className="font-inter text-xs font-light text-black/50">{label}</span>
               </div>
             ))}
           </div>
@@ -281,7 +277,7 @@ export function HeroContent() {
               <motion.div
                 key={i}
                 className="flex-1 rounded-sm"
-                style={{ background: 'rgba(0,229,255,0.35)' }}
+                style={{ background: 'rgba(0,102,204,0.35)' }}
                 initial={{ height: '10%' }}
                 animate={{ height: `${h}%` }}
                 transition={{ duration: 1.2, delay: i * 0.1, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }}
@@ -289,9 +285,9 @@ export function HeroContent() {
             ))}
           </div>
 
-          <div className="mt-4 border-t border-white/[0.08] pt-3">
-            <span className="font-syne text-xl font-extrabold text-white">12</span>
-            <span className="ml-1.5 font-inter text-xs font-light text-white/40">processes automated</span>
+          <div className="mt-4 border-t border-black/[0.06] pt-3">
+            <span className="font-syne text-xl font-extrabold text-black">12</span>
+            <span className="ml-1.5 font-inter text-xs font-light text-black/40">processes automated</span>
           </div>
         </motion.div>
       </motion.div>
@@ -299,14 +295,14 @@ export function HeroContent() {
       {/* Scroll indicator — desktop only */}
       <div className="absolute bottom-10 right-10 hidden items-end gap-3 md:flex">
         <span
-          className="font-mono text-[9px] tracking-[0.4em] text-white/20"
+          className="font-mono text-[9px] tracking-[0.4em] text-black/15"
           style={{ writingMode: 'vertical-rl' }}
         >
           SCROLL
         </span>
         <div className="flex flex-col items-center gap-1">
           <motion.div
-            className="h-12 w-px bg-gradient-to-b from-white/40 to-transparent"
+            className="h-12 w-px bg-gradient-to-b from-black/25 to-transparent"
             animate={{ scaleY: [0.4, 1, 0.4] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           />
@@ -314,7 +310,7 @@ export function HeroContent() {
             animate={{ y: [0, 6, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/25">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-black/20">
               <polyline points="6 9 12 15 18 9" />
             </svg>
           </motion.div>

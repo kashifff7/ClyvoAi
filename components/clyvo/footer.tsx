@@ -1,7 +1,7 @@
 import Image from 'next/image'
 
 const LOGO_FILTER = [
-  'invert(1)',
+  'invert(0)',
   'sepia(1)',
   'saturate(5)',
   'hue-rotate(155deg)',
@@ -21,7 +21,7 @@ function LogoBadge() {
         objectFit:    'contain',
         flexShrink:   0,
         filter:       LOGO_FILTER,
-        mixBlendMode: 'screen',
+        mixBlendMode: 'normal',
         animation:    'logo-float-3d 5s ease-in-out infinite',
       }}
     />
@@ -45,10 +45,10 @@ export function Footer() {
         <div className="flex flex-col items-center gap-3 sm:items-start">
           <a href="#home" className="flex items-center gap-2.5">
             <LogoBadge />
-            <span className="font-syne text-lg font-semibold text-white">Clyvo</span>
-            <span className="font-syne text-lg font-semibold" style={{ color: '#00E5FF' }}>AI</span>
+            <span className="font-syne text-lg font-semibold text-black">Clyvo</span>
+            <span className="font-syne text-lg font-semibold" style={{ color: '#0066cc' }}>AI</span>
           </a>
-          <p className="font-inter text-sm text-white/30">Custom AI. Real Results.</p>
+          <p className="font-inter text-sm text-black/35">Custom AI. Real Results.</p>
         </div>
 
         {/* Nav links */}
@@ -58,7 +58,7 @@ export function Footer() {
               <li key={link.href + link.label}>
                 <a
                   href={link.href}
-                  className="font-inter text-sm text-white/40 transition-colors duration-200 hover:text-white/70"
+                  className="font-inter text-sm text-black/45 transition-colors duration-200 hover:text-black/65"
                 >
                   {link.label}
                 </a>
@@ -78,11 +78,11 @@ export function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-white/[0.06]">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-5 font-inter text-xs text-white/20 sm:flex-row">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-5 font-inter text-xs text-black/25 sm:flex-row">
           <p>© 2026 Clyvo AI. All rights reserved.</p>
           <div className="flex gap-6">
-            <a href="#" className="transition-colors hover:text-white/50">Privacy</a>
-            <a href="#" className="transition-colors hover:text-white/50">Terms</a>
+            <a href="#" className="transition-colors hover:text-black/55">Privacy</a>
+            <a href="#" className="transition-colors hover:text-black/55">Terms</a>
           </div>
         </div>
       </div>

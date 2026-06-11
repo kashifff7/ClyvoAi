@@ -46,23 +46,23 @@ function StepItem({
       {/* Connector dot on left rail — desktop only */}
       <motion.div
         className="absolute -left-[1.375rem] top-10 hidden h-2.5 w-2.5 rounded-full sm:block"
-        style={{ scale: dotScale, background: '#00E5FF' }}
+        style={{ scale: dotScale, background: '#0066cc' }}
       />
 
       {/* Step number */}
       <motion.div className="relative flex items-center gap-2" style={{ opacity: numOpacity }}>
-        <span className="font-syne text-3xl font-bold leading-none tracking-tight text-white sm:text-4xl">
+        <span className="font-syne text-3xl font-bold leading-none tracking-tight text-black sm:text-4xl">
           {step.num}
         </span>
         <motion.div style={{ opacity: completedOpacity }}>
-          <Check className="h-4 w-4 text-white/50" />
+          <Check className="h-4 w-4 text-black/55" />
         </motion.div>
       </motion.div>
 
       {/* Content — no x translate (prevents mobile overflow) */}
       <motion.div style={{ opacity: contentOpacity }}>
-        <h3 className="font-syne text-lg font-semibold text-white sm:text-xl">{step.title}</h3>
-        <p className="mt-2 font-inter text-sm font-light leading-[1.75] text-white/45 md:text-base">
+        <h3 className="font-syne text-lg font-semibold text-black sm:text-xl">{step.title}</h3>
+        <p className="mt-2 font-inter text-sm font-light leading-[1.75] text-black/50 md:text-base">
           {step.description}
         </p>
       </motion.div>
@@ -92,13 +92,13 @@ export function OperatingLayerScene() {
           transition={{ duration: 0.6, ease: EASE_CINEMATIC }}
           className="mb-12 md:mb-16"
         >
-          <span className="font-inter font-medium text-[11px] uppercase tracking-[0.18em] text-white/35">
+          <span className="font-inter font-medium text-[11px] uppercase tracking-[0.18em] text-black/40">
             How It Works
           </span>
-          <h2 className="mt-4 text-balance font-syne text-2xl font-bold tracking-[-0.03em] text-white sm:text-3xl md:text-5xl" style={{ fontFeatureSettings: "'ss01'" }}>
+          <h2 className="mt-4 text-balance font-syne text-2xl font-bold tracking-[-0.03em] text-black sm:text-3xl md:text-5xl" style={{ fontFeatureSettings: "'ss01'" }}>
             A process built for results, not risk.
           </h2>
-          <p className="mt-4 max-w-xl font-inter text-sm font-light leading-[1.75] text-white/45 md:text-base">
+          <p className="mt-4 max-w-xl font-inter text-sm font-light leading-[1.75] text-black/50 md:text-base">
             Six clear stages, full transparency throughout — from the first call to live and beyond.
           </p>
         </motion.div>
@@ -117,7 +117,7 @@ export function OperatingLayerScene() {
                 scaleY: lineScaleY,
                 transformOrigin: 'top',
                 height: '100%',
-                background: '#00E5FF',
+                background: '#0066cc',
               }}
             />
           </div>

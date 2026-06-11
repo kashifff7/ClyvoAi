@@ -89,12 +89,12 @@ export function TransformationScene() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.8 }}
           transition={{ duration: 0.5, ease: EASE_CINEMATIC }}
-          className="font-inter font-medium text-[11px] uppercase tracking-[0.18em] text-white/35"
+          className="font-inter font-medium text-[11px] uppercase tracking-[0.18em] text-black/40"
         >
           What We Build
         </motion.span>
 
-        <h2 className="mt-4 font-syne text-2xl font-bold tracking-[-0.03em] text-white sm:text-3xl md:text-5xl" style={{ fontFeatureSettings: "'ss01'" }}>
+        <h2 className="mt-4 font-syne text-2xl font-bold tracking-[-0.03em] text-black sm:text-3xl md:text-5xl" style={{ fontFeatureSettings: "'ss01'" }}>
           {['Five', 'capabilities.', 'Infinite', 'applications.'].map((word, i) => (
             <motion.span
               key={word}
@@ -114,7 +114,7 @@ export function TransformationScene() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.6 }}
           transition={{ duration: 0.6, delay: 0.25, ease: EASE_CINEMATIC }}
-          className="mt-3 max-w-xl font-inter text-sm font-light text-white/45 md:text-base"
+          className="mt-3 max-w-xl font-inter text-sm font-light text-black/50 md:text-base"
         >
           Every engagement is built from scratch around your business.
         </motion.p>
@@ -164,22 +164,22 @@ function ServiceCard({
         ${fullWidth ? 'w-full' : 'w-[360px]'}`}
       style={{ minHeight: fullWidth ? undefined : 320 }}
     >
-      <span className="font-syne text-3xl font-bold tracking-tight text-white/15">
+      <span className="font-syne text-3xl font-bold tracking-tight text-black/15">
         {s.num}
       </span>
 
       <div className="mt-5 flex h-11 w-11 items-center justify-center rounded-xl border border-white/[0.10]">
-        <s.icon className="h-5 w-5 text-white/50" />
+        <s.icon className="h-5 w-5 text-black/55" />
       </div>
 
-      <h3 className="mt-5 font-syne text-lg font-semibold text-white md:text-xl">{s.title}</h3>
-      <p className="mt-3 font-inter text-sm font-light leading-[1.75] text-white/45">
+      <h3 className="mt-5 font-syne text-lg font-semibold text-black md:text-xl">{s.title}</h3>
+      <p className="mt-3 font-inter text-sm font-light leading-[1.75] text-black/50">
         {s.description}
       </p>
 
       <a
         href={`/services/${s.num === '01' ? 'ai-chatbots' : s.num === '02' ? 'workflow-automation' : s.num === '03' ? 'custom-ai-models' : s.num === '04' ? 'voice-agents' : 'system-integrations'}`}
-        className="mt-auto pt-6 font-inter text-xs text-white/30 underline-offset-2 transition-colors hover:text-[#00E5FF]"
+        className="mt-auto pt-6 font-inter text-xs text-black/35 underline-offset-2 transition-colors hover:text-[#0066cc]"
       >
         Learn more →
       </a>
