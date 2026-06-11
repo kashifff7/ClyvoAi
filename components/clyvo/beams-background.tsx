@@ -23,20 +23,9 @@ function extendMaterial(BaseMaterial: typeof THREE.MeshStandardMaterial, cfg: an
   })
   let vert = `${cfg.header}\n${cfg.vertexHeader ?? ''}\n${baseVert}`
   let frag = `${cfg.header}\n${cfg.fragmentHeader ?? ''}\n${baseFrag}`
-  for (const [inc, code] of Object.entries(cfg.vertex ?? {})) {
-    vert = vert.replace(inc, `${inc}\n${code}`)
-  }
-  for (const [inc, code] of Object.entries(cfg.fragment ?? {})) {
-    frag = frag.replace(inc, `${inc}\n${code}`)
-  }
-  return new THREE.ShaderMaterial({
-    defines: { ...baseDefines },
-    uniforms,
-    vertexShader: vert,
-    fragmentShader: frag,
-    lights: true,
-    fog: !!cfg.material?.fog,
-  })
+  for (const [inc, code] of Object.entries(cfg.vertex ?? {})) vert = vert.replace(inc, `${inc}\n${code}`)
+  for (const [inc, code] of Object.entries(cfg.fragment ?? {})) frag = frag.replace(inc, `${inc}\n${code}`)
+  return new THREE.ShaderMaterial({ defines: { ...baseDefines }, uniforms, vertexShader: vert, fragmentShader: frag, lights: true })
 }
 
 const hexToRGB = (hex: string) => {
@@ -55,29 +44,24 @@ float cnoise(vec3 P){vec3 Pi0=floor(P);vec3 Pi1=Pi0+vec3(1);Pi0=mod(Pi0,289.);Pi
 
 // ─── Geometry ─────────────────────────────────────────────────────────────────
 
-function createStackedPlanesGeometry(n: number, width: number, height: number, heightSegments: number) {
+function createStackedPlanesGeometry(n: number, width: number, height: number, segs: number) {
   const geo = new THREE.BufferGeometry()
-  const numV = n * (heightSegments + 1) * 2
-  const numF = n * heightSegments * 2
-  const positions = new Float32Array(numV * 3)
-  const indices = new Uint32Array(numF * 3)
-  const uvs = new Float32Array(numV * 2)
+  const positions = new Float32Array(n * (segs + 1) * 2 * 3)
+  const indices = new Uint32Array(n * segs * 2 * 3)
+  const uvs = new Float32Array(n * (segs + 1) * 2 * 2)
   let vOff = 0, iOff = 0, uvOff = 0
-  const totalW = n * width + (n - 1) * 0
-  const xBase = -totalW / 2
+  const xBase = -(n * width) / 2
   for (let i = 0; i < n; i++) {
     const x = xBase + i * width
-    const uvX = Math.random() * 300
-    const uvY = Math.random() * 300
-    for (let j = 0; j <= heightSegments; j++) {
-      const y = height * (j / heightSegments - 0.5)
+    const uvX = Math.random() * 300, uvY = Math.random() * 300
+    for (let j = 0; j <= segs; j++) {
+      const y = height * (j / segs - 0.5)
+      const v = j / segs
       positions.set([x, y, 0, x + width, y, 0], vOff * 3)
-      const v = j / heightSegments
       uvs.set([uvX, v + uvY, uvX + 1, v + uvY], uvOff)
-      if (j < heightSegments) {
+      if (j < segs) {
         const a = vOff, b = vOff + 1, c = vOff + 2, d = vOff + 3
-        indices.set([a, b, c, c, b, d], iOff)
-        iOff += 6
+        indices.set([a, b, c, c, b, d], iOff); iOff += 6
       }
       vOff += 2; uvOff += 4
     }
@@ -89,7 +73,7 @@ function createStackedPlanesGeometry(n: number, width: number, height: number, h
   return geo
 }
 
-// ─── Mesh components ──────────────────────────────────────────────────────────
+// ─── Mesh ─────────────────────────────────────────────────────────────────────
 
 const MergedPlanes = forwardRef<THREE.Mesh, { material: THREE.ShaderMaterial; width: number; count: number; height: number }>(
   ({ material, width, count, height }, ref) => {
@@ -118,101 +102,72 @@ function DirLight({ position, color }: { position: [number,number,number]; color
   return <directionalLight ref={dir} color={color} intensity={0.6} position={position} />
 }
 
-// ─── Main Beams scene ─────────────────────────────────────────────────────────
+// ─── Scene ────────────────────────────────────────────────────────────────────
 
-function BeamsScene({
-  beamWidth = 2,
-  beamHeight = 15,
-  beamNumber = 12,
-  lightColor = '#ffffff',
-  speed = 2,
-  noiseIntensity = 1.75,
-  scale = 0.2,
-  rotation = 0,
-}: BeamsProps) {
+function BeamsScene() {
   const meshRef = useRef<THREE.Mesh>(null!)
-
   const beamMaterial = useMemo(() => extendMaterial(THREE.MeshStandardMaterial, {
-    header: `
-varying vec3 vEye; varying float vNoise; varying vec2 vUv; varying vec3 vPosition;
-uniform float time; uniform float uSpeed; uniform float uNoiseIntensity; uniform float uScale;
-${NOISE_GLSL}`,
-    vertexHeader: `
-float getPos(vec3 pos){vec3 noisePos=vec3(pos.x*0.,pos.y-uv.y,pos.z+time*uSpeed*3.)*uScale;return cnoise(noisePos);}
-vec3 getCurrentPos(vec3 pos){vec3 p=pos;p.z+=getPos(pos);return p;}
-vec3 getNormal(vec3 pos){vec3 c=getCurrentPos(pos);vec3 nx=getCurrentPos(pos+vec3(0.01,0,0));vec3 nz=getCurrentPos(pos+vec3(0,-0.01,0));return normalize(cross(normalize(nz-c),normalize(nx-c)));}`,
+    header: `varying vec3 vEye;varying float vNoise;varying vec2 vUv;varying vec3 vPosition;uniform float time;uniform float uSpeed;uniform float uNoiseIntensity;uniform float uScale;\n${NOISE_GLSL}`,
+    vertexHeader: `float getPos(vec3 pos){return cnoise(vec3(pos.x*0.,pos.y-uv.y,pos.z+time*uSpeed*3.)*uScale);}vec3 getCurrentPos(vec3 pos){vec3 p=pos;p.z+=getPos(pos);return p;}vec3 getNormal(vec3 pos){vec3 c=getCurrentPos(pos);vec3 nx=getCurrentPos(pos+vec3(0.01,0,0));vec3 nz=getCurrentPos(pos+vec3(0,-0.01,0));return normalize(cross(normalize(nz-c),normalize(nx-c)));}`,
     fragmentHeader: '',
     vertex: {
       '#include <begin_vertex>': 'transformed.z += getPos(transformed.xyz);',
       '#include <beginnormal_vertex>': 'objectNormal = getNormal(position.xyz);',
     },
     fragment: {
-      '#include <dithering_fragment>': `
-float randomNoise=noise(gl_FragCoord.xy);
-gl_FragColor.rgb-=randomNoise/15.*uNoiseIntensity;`,
+      '#include <dithering_fragment>': 'float rn=noise(gl_FragCoord.xy);gl_FragColor.rgb-=rn/15.*uNoiseIntensity;',
     },
-    material: { fog: true },
     uniforms: {
       diffuse: new THREE.Color(...hexToRGB('#000000')),
       time: { value: 0 },
       roughness: 0.3,
       metalness: 0.3,
-      uSpeed: { value: speed },
+      uSpeed: { value: 1.5 },
       envMapIntensity: 10,
-      uNoiseIntensity: noiseIntensity,
-      uScale: scale,
+      uNoiseIntensity: 1.75,
+      uScale: 0.2,
     },
-  }), [speed, noiseIntensity, scale])
+  }), [])
 
   return (
-    <group rotation={[0, 0, degToRad(rotation)]}>
-      <PlaneNoise ref={meshRef} material={beamMaterial} count={beamNumber} width={beamWidth} height={beamHeight} />
-      <DirLight color={lightColor} position={[0, 3, 10]} />
+    <group rotation={[0, 0, degToRad(30)]}>
+      <PlaneNoise ref={meshRef} material={beamMaterial} count={20} width={3} height={30} />
+      <DirLight color="#ffffff" position={[0, 3, 10]} />
       <ambientLight intensity={0.3} />
       <PerspectiveCamera makeDefault position={[0, 0, 20]} fov={30} />
     </group>
   )
 }
 
-// ─── Exported wrapper ─────────────────────────────────────────────────────────
-
-interface BeamsProps {
-  beamWidth?: number
-  beamHeight?: number
-  beamNumber?: number
-  lightColor?: string
-  speed?: number
-  noiseIntensity?: number
-  scale?: number
-  rotation?: number
-}
+// ─── Export ───────────────────────────────────────────────────────────────────
 
 export default function BeamsBackground() {
   return (
+    // This div is fixed + full viewport. It is NOT inside overflow-hidden.
+    // The canvas MUST be positioned absolute inside a relative/fixed parent
+    // with explicit pixel dimensions — never rely on % inside overflow:hidden.
     <div style={{
-      position: 'fixed', top: 0, left: 0,
-      width: '100vw', height: '100vh',
-      pointerEvents: 'none', zIndex: 0,
+      position: 'fixed',
+      top: 0, left: 0,
+      width: '100vw',
+      height: '100vh',
+      pointerEvents: 'none',
+      zIndex: 0,
     }}>
       <Canvas
         dpr={[1, 1.5]}
         frameloop="always"
-        gl={{ antialias: false, powerPreference: 'high-performance' }}
-        style={{ width: '100vw', height: '100vh', display: 'block' }}
-        onCreated={({ gl }) => {
-          gl.setSize(window.innerWidth, window.innerHeight)
+        gl={{ antialias: false, powerPreference: 'high-performance', alpha: true }}
+        camera={false as any}
+        style={{
+          position: 'absolute',
+          top: 0, left: 0,
+          width: '100%',
+          height: '100%',
+          display: 'block',
         }}
       >
-        <BeamsScene
-          beamWidth={3}
-          beamHeight={30}
-          beamNumber={20}
-          lightColor="#ffffff"
-          speed={1.5}
-          noiseIntensity={1.75}
-          scale={0.2}
-          rotation={30}
-        />
+        <BeamsScene />
       </Canvas>
     </div>
   )
