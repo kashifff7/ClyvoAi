@@ -32,6 +32,11 @@ export const metadata: Metadata = {
   },
   twitter: { card: 'summary_large_image', title: 'Clyvo AI | Custom AI. Real Results.', images: ['/og-image.png'] },
   robots: { index: true, follow: true },
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
