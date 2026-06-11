@@ -169,7 +169,6 @@ gl_FragColor.rgb-=randomNoise/15.*uNoiseIntensity;`,
       <PlaneNoise ref={meshRef} material={beamMaterial} count={beamNumber} width={beamWidth} height={beamHeight} />
       <DirLight color={lightColor} position={[0, 3, 10]} />
       <ambientLight intensity={0.3} />
-      <color attach="background" args={['#000000']} />
       <PerspectiveCamera makeDefault position={[0, 0, 20]} fov={30} />
     </group>
   )
@@ -199,7 +198,7 @@ export default function BeamsBackground() {
         dpr={[1, 1.5]}
         frameloop="always"
         gl={{ antialias: false, powerPreference: 'high-performance' }}
-        style={{ width: '100vw', height: '100vh' }}
+        style={{ width: '100vw', height: '100vh', display: 'block' }}
         onCreated={({ gl }) => {
           gl.setSize(window.innerWidth, window.innerHeight)
         }}
