@@ -210,3 +210,21 @@ button, a { cursor: pointer; }
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+@media (max-width: 768px) {
+  .btn-primary {
+    width: 100%;
+    justify-content: center;
+    font-size: 11px;
+    padding: 14px 24px;
+  }
+  .btn-ghost {
+    width: 100%;
+    justify-content: center;
+    font-size: 11px;
+    padding: 13px 24px;
+  }
+  .section-padding {
+    padding: 4rem 1.25rem;
+  }
+}

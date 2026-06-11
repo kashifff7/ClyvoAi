@@ -100,7 +100,7 @@ export function HeroContent() {
               >{w}</motion.span>
             ))}
           </span>
-          <span className="block headline-luxury text-[#1A1A1A]/20 overflow-hidden"
+          <span className="block headline-luxury text-[#1A1A1A]/15 overflow-hidden"
             style={{ fontSize: '0.92em' }}>
             {['Real', 'Results.'].map((w, i) => (
               <motion.span key={w} className="mr-[0.15em] inline-block last:mr-0"
