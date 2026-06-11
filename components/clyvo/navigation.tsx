@@ -59,6 +59,9 @@ export function Navigation() {
         }}
       >
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 md:px-10">
+          {/* Left spacer — mobile balance only */}
+          <div className="h-10 w-10 md:hidden" />
+
           {/* Logo */}
           <a href="/" className="flex items-center gap-3 group">
             <LogoBadge size={26} />
@@ -115,13 +118,14 @@ export function Navigation() {
                 {l.label}
               </a>
             ))}
-          </nav>
 
-          {/* CTA + mobile toggle */}
-          <div className="flex items-center gap-3">
-            <a href="#contact" className="btn-primary hidden md:inline-flex" style={{ fontSize: '10px', padding: '10px 16px' }}>
+            <a href="#contact" className="btn-primary ml-2" style={{ fontSize: '10px', padding: '10px 16px' }}>
               Book a Discovery Call
             </a>
+          </nav>
+
+          {/* Mobile toggle */}
+          <div className="flex items-center gap-3">
             <button
               className="flex h-10 w-10 items-center justify-center text-[#1A1A1A]/60 hover:text-[#1A1A1A] md:hidden"
               onClick={() => setMobileOpen(true)}
